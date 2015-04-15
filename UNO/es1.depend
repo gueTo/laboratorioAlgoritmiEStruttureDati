@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1429125252 source:c:\users\antonio\desktop\lasd\es1.c
+	"es1.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+
+1429125375 c:\users\antonio\desktop\lasd\es1.h
+
+1429125316 source:c:\users\antonio\desktop\lasd\es1main.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<time.h>
+	"es1.h"
+
+1429112820 c:\\users\\antonio\\desktop\\lasd\\es1.h
+
