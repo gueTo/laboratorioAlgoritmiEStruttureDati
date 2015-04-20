@@ -34,7 +34,12 @@
 		<Unit filename="data.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="data.h" />
 		<Unit filename="es2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="es2.h" />
+		<Unit filename="es2main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

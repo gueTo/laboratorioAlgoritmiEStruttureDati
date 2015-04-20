@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1429182086 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\generricarbes2\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+
+1429183321 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\generricarbes2\es2.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+

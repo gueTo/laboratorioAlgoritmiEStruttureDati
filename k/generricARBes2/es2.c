@@ -2,20 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-/***DICHIARAZIONI***/
-#define LENGHT_WORD 5
-
-typedef void*(*FUNINS)();
-typedef int(* FUNCOM)(void*, void*);
-typedef void(* FUNPRINT)(void*);
-typedef void (*FUNDEL)(void*);
-
-typedef struct ARBType{
-    void* element;
-    struct ARBType* sx;
-    struct ARBType* dx;
-}ARB;
-
+#include "data.h"
 
 /*****FUNZIONI*****/
 
@@ -55,7 +42,7 @@ ARB* detachMin(ARB* son, ARB* dad){
     return son;
 }
 
-ARB* adjustARB(ARB* ROOT){
+ARB* adjustARB(ARB* ROOT, FUNDEL del){
     //SI CERCA IL NODO ADATTO DA SCMBIARE CON QUELLO CHE DEVE
     //ESSERE CANCELLATO, IN SEGUITO SI SOSTITUISCONO I DATI
     //TRA I DUE NODI E SI DEALLOCA IL CANDIDATO ALLA SOSTITUZIONE
@@ -77,7 +64,7 @@ ARB* adjustARB(ARB* ROOT){
         ROOT->element=temp->element;
         temp->element=etemp;
     }
-    freeARBNode(temp);
+    freeARBNode(temp, del);
     return ROOT;
 }
 
@@ -117,10 +104,10 @@ ARB* insertARBNode(ARB* ROOT, void* toInsert, FUNCOM compare){
 
 void printARB(ARB* ROOT, FUNPRINT print){
     if(ROOT!=NULL){
-        printf("\n")
+        printf("\n");
         print(ROOT->element);
-        printARB(ROOT->sx);
-        printARB(ROOT->dx);
+        printARB(ROOT->sx, print);
+        printARB(ROOT->dx, print);
     }
 }
 
@@ -149,19 +136,19 @@ ARB* deleteAllKey(ARB* ROOT, FUNDEL del){
 //PREVEDE UNA NAVIGAZIONE NELL'ALBERO PER LA RICERCA DELLA STRINGA
 //NEL CASO LA STRINGA VENGA TROVATA VERRA' CANCELLATA
 
-ARB* searchStringAndDelete(ARB* ROOT, void* toDelete, FUNCOM compare){
+ARB* searchStringAndDelete(ARB* ROOT, void* toDelete, FUNCOM compare, FUNDEL del){
     int r;
     if(ROOT!=NULL){
-        r=strcmp(ROOT->stringElement, toDelete, compare);
+        r=compare(ROOT->element, toDelete);
         switch(r){
             case -1:
-                ROOT->dx=searchStringAndDelete(ROOT->dx, toDelete, compare);
+                ROOT->dx=searchStringAndDelete(ROOT->dx, toDelete, compare, del);
                 break;
             case 0:
-                ROOT=adjustARB(ROOT);
+                ROOT=adjustARB(ROOT, del);
                 break;
             case 1:
-                ROOT->sx=searchStringAndDelete(ROOT->sx, toDelete, compare);
+                ROOT->sx=searchStringAndDelete(ROOT->sx, toDelete, compare, del);
                 break;
         }
     }
@@ -182,27 +169,27 @@ la seguente proprietà:
 //INOLTRE PER EVITARE DI SCORRERE INUTILMENTE TUTTO L'ALBERO CONTROLLA SE E' IL CASO DI SCENDERE
 //NEI SOTTOALBERI CONTROLLANDO SE LE STRINGHE DELLE RADICI DEI SOTTOALBERI SI TROVANO ALL'INTERNO DEL RANGE
 
-ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd){
-    if(strcmp(strMin, strMax)>0){
+ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCOM compare, FUNODD fodd, FUNDEL del){
+    if(compare(strMin, strMax)>0){
         return ROOT;
     }
     if(ROOT!=NULL){
-        if(strcmp(ROOT->stringElement, strMin)>=0 && strcmp(ROOT->stringElement, strMax)<=0){
-            if(strcmp(ROOT->stringElement, strMin)>0){
-                ROOT->sx=searchConditionAndDeleteARB(ROOT->sx, strMin, strMax,odd);
+        if(compare(ROOT->element, strMin)>=0 && compare(ROOT->element, strMax)<=0){
+            if(compare(ROOT->element, strMin)>0){
+                ROOT->sx=searchConditionAndDeleteARB(ROOT->sx, strMin, strMax, odd, compare, fodd, del);
             }
-            if(strcmp(ROOT->stringElement, strMax)<0){
-                ROOT->dx=searchConditionAndDeleteARB(ROOT->dx, strMin, strMax, odd);
+            if(compare(ROOT->element, strMax)<0){
+                ROOT->dx=searchConditionAndDeleteARB(ROOT->dx, strMin, strMax, odd, compare, fodd, del);
             }
-            if(strlen(ROOT->stringElement)%2==odd){
-                ROOT=adjustARB(ROOT);
+            if(fodd(ROOT->element, odd)){
+                ROOT=adjustARB(ROOT, del);
             }
         }else{
-            if(strcmp(ROOT->stringElement, strMin)>0){
-                ROOT->sx=searchConditionAndDeleteARB(ROOT->sx, strMin, strMax, odd);
+            if(compare(ROOT->element, strMin)>0){
+                ROOT->sx=searchConditionAndDeleteARB(ROOT->sx, strMin, strMax, odd, compare, fodd, del);
             }
-            if(strcmp(ROOT->stringElement, strMax)<0){
-                ROOT->dx=searchConditionAndDeleteARB(ROOT->dx, strMin, strMax, odd);
+            if(compare(ROOT->element, strMax)<0){
+                ROOT->dx=searchConditionAndDeleteARB(ROOT->dx, strMin, strMax, odd, compare, fodd, del);
             }
         }
     }
@@ -219,7 +206,6 @@ ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd)
 ARB* casualARB(ARB* ROOT, int numNodes, FUNRAND frandom, FUNCOM compare){
     srand(time(NULL));
     void* toIns;
-    int lenght, cicle, ch;
     while(numNodes>0){
         toIns=frandom();
         ROOT=insertARBNode(ROOT, toIns, compare);
@@ -235,13 +221,13 @@ ARB* casualARB(ARB* ROOT, int numNodes, FUNRAND frandom, FUNCOM compare){
 //MAN MANO CHE INCONTRA QUELLE DELL'ALBERO ORIGINALE
 //COSI' FACENDO INSERISCE NEL DUPLICATO LE CHIAVI NELLO STESSO ORDINE IN CUI SONO
 //STATE INSERITE QUELLE DELL'ALBERO INIZIALE
-ARB* duplicateARB(ARB* original, FUNCPY fcopy()){
+ARB* duplicateARB(ARB* original, FUNCPY fcopy){
     ARB* copy=NULL;
     if(original!=NULL){
         copy=(ARB*)malloc(sizeof(ARB));
         fcopy(copy->element, original->element);
-        copy->sx=duplicateARB(original->sx);
-        copy->dx=duplicateARB(original->dx);
+        copy->sx=duplicateARB(original->sx, fcopy);
+        copy->dx=duplicateARB(original->dx, fcopy);
     }
     return copy;
 }
@@ -274,24 +260,16 @@ int controlSameARB(ARB* one, ARB* two, FUNCOM compare){
 /***
 9. riempimento di un array ordinato contenente tutti le stringhe di un ARB dato;
 ***/
-//SI ALLOCA PRIMA UN ARRAY DELLA STESSA DIMENSIONE DELL'ALBERO, POI SI PARTE CON IL SUO RIEMPIMENTO ORDINATO
-void** vectorizeARB(ARB* toVectorize){
-    int size=countARBNode(toVectorize);
-    void** result;
-    result=(void**)malloc(sizeof(void*)*size);
-    size--;
-    result=vectorizeFunction(toVectorize, result, &size);
-    return result;
-}
+
 
 //PASSANDO LA GRANDEZZA DELL'ARRAY, L'ALGORITMO RIEMPIE A PARTIRE DALL'ULTIMO POSTO E DECREMENTA IL CONTATORE
-char** vectorizeFunction(ARB* ROOT, void** vector, int* k, FUNCPY fcopy){
+void** vectorizeFunction(ARB* ROOT, void** vector, int* k, FUNCPY fcopy){
     if(ROOT!=NULL){
             //RICORRE FINO A RAGGIUNGERE UN NODO NULLO
 		vector=vectorizeFunction(ROOT->dx, vector, k, fcopy);
     //SCENDE A DESTRA
 		//vector[(*k)]=(char*)malloc(sizeof(char)*strlen(ROOT->stringElement));
-		fcopy(vector[(*k)],ROOT->stringElement);
+		fcopy(vector[(*k)],ROOT->element);
 		(*k)=(*k)-1;
 		//ALLOCA LO SPAZIO PER LA NUOVA STRINGA E COPIA QUELLA PRESENTE NELL'ALBERO
 		//DECREMENTA IL CONTATORE PER LA POSIZIONE DEI NODI
@@ -300,33 +278,27 @@ char** vectorizeFunction(ARB* ROOT, void** vector, int* k, FUNCPY fcopy){
 	}
 	return vector;
 }
-
+//SI ALLOCA PRIMA UN ARRAY DELLA STESSA DIMENSIONE DELL'ALBERO, POI SI PARTE CON IL SUO RIEMPIMENTO ORDINATO
+void** vectorizeARB(ARB* toVectorize, FUNCPY fcopy){
+    int size=countARBNode(toVectorize);
+    void** result;
+    result=(void**)malloc(sizeof(void*)*size);
+    size--;
+    result=vectorizeFunction(toVectorize, result, &size, fcopy);
+    return result;
+}
 
 /***
 10. costruzione di un ABR perfettamente bilanciato a partire da un ARB dato (NOTA: in
 un ABR perfettamente bilanciato il numero di nodi dei due sottoalberi di ogni nodo differiscono
 al massimo di 1. Si sfrutti opportunamente il punto 9 per realizzare la funzionalità).
 ***/
-//USIAMO IL VETTORE CREATO AL PUNTO 9.
-ARB* balanceARB(ARB* toBalance, FUNINS ins){
-    char** temp;
-    ARB* result=NULL;
-    int i;
-    int size=countARBNode(toBalance);
-    temp=vectorizeARB(toBalance);
-    result=balanceFunction(temp, 0, size-1, result, ins);
-    for(i=0; i<size; i++){
-        free(temp[i]);
-    }
-    free(temp);
-    return result;
-}
 
 //PER BILANCIARE E' SUFFICIENTE RIEMPIRE LA RADICE DELL'ALBERO CON L'ELEMENTO MEDIANO DEL VETTORE ORDINATO
 //POI SI PASSANO GLI ESTREMI DEI SOTTOARRAY DELIMITATI DALL'ELEMENTO MEDIANO
 //SI PROCEDE IN QUESTO MODO FINCHE' NON SI INCROCIANO GLI ESTREMI PASSATI
 //A QUEL PUNTO L'ALGORITMO TERMINA
-ARB* balanceFunction(char** source, int i, int j, ARB* res, FUNCOM compare){
+ARB* balanceFunction(void** source, int i, int j, ARB* res, FUNCOM compare){
     int k;
     if(i<=j){
         k=(i+j)/2;
@@ -335,4 +307,28 @@ ARB* balanceFunction(char** source, int i, int j, ARB* res, FUNCOM compare){
         res=balanceFunction(source, k+1, j, res, compare);
     }
     return res;
+}
+
+
+//USIAMO IL VETTORE CREATO AL PUNTO 9.
+ARB* balanceARB(ARB* toBalance, FUNCOM compare, FUNCPY fcopy){
+    void** temp;
+    ARB* result=NULL;
+    int i;
+    int size=countARBNode(toBalance);
+    temp=vectorizeARB(toBalance, fcopy);
+    result=balanceFunction(temp, 0, size-1, result, compare);
+    for(i=0; i<size; i++){
+        free(temp[i]);
+    }
+    free(temp);
+    return result;
+}
+
+int oddInteger(void* isOdd, int odd){
+    return(((*(int*)isOdd)%2)==odd);
+}
+
+int oddString(void* isOdd, int odd){
+    return((strlen((char*)isOdd)%2)==odd);
 }

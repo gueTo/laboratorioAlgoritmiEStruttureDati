@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="es1" />
+		<Option title="es2" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/es1" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/es2" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/es1" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/es2" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,24 +31,15 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../es1.c">
+		<Unit filename="data.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../es1.h" />
-		<Unit filename="../es1main.c">
+		<Unit filename="data.h" />
+		<Unit filename="es2.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="es1.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="es1.h" />
-		<Unit filename="es1main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="l.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="qr3wte.c">
+		<Unit filename="es2.h" />
+		<Unit filename="es2main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

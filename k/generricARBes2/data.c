@@ -4,41 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-/***DICHIARAZIONE FUNZIONI***/
-
-#define STRING_MAX_SIZE 10
-
-void* insertString();
-void* insertInteger();
-void* insertFloat();
-void printInteger(void*);
-void printFloat(void*);
-void printString(void*);
-int compareInteger(void*, void*);
-int compareFloat(void*, void*);
-int compareString(void*, void*);
-void deleteString(void*);
-void deleteInteger(void*);
-void deleteFloat(void*);
-void* casualInteger();
-void* casualFloat();
-void* casualString();
-void* copyString();
-void* copyInteger();
-void* copyFloat();
+#include "data.h"
 
 
-int main(){
-    void* i=insertFloat();
-    void* j;
-    j=copyFloat(j, i);
-    free(i);
-    printf("\n");
-    i=insertFloat();
-    printFloat(j);
-    return 0;
-}
+/***
+DEFINIZIONE FUNZIONI PER TIPO DI VARIABILE
+***/
 
 
 /***

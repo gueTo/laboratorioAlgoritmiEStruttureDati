@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1429549443 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1429549443 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.h
+
+1429551517 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+	"es2.h"
+
+1429549443 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2.h
+
+1429551680 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2main.c
+	<stdio.h>
+	<stdlib.h>
+	"data.h"
+	"es2.h"
+
