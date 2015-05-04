@@ -36,7 +36,7 @@ void* insertString(){
 void* insertInteger(){
     char* string=insertString();
     void* elem=(int*)malloc(sizeof(int));
-    elem=(void*)(atoi(string));
+    *(int*)elem=atoi((char*)string);
     free(string);
     return elem;
 };
@@ -76,13 +76,12 @@ void* casualString(){
 void* casualInteger(){
     srand(time(NULL));
     void* retInt=(int*)malloc(sizeof(int));
-    retInt=(rand()%100);
+    *(int*)retInt=(rand()%100);
     return retInt;
 }
 
 void* casualFloat(){
     srand(time(NULL));
-    float a = 1.55;
     void* retFlo=(float*)malloc(sizeof(float));
     *(float*)retFlo=(((float)rand()/(float)(RAND_MAX))*(float)(rand()))/(111.11);
     return retFlo;
@@ -91,8 +90,9 @@ void* casualFloat(){
 /***
 FUNZIONI DI STAMPA
 ***/
+
 void printInteger(void* toPrint){
-    printf("%d", ((int*)(toPrint)));
+    printf("%d", *(int*)(toPrint));
 }
 
 void printFloat(void* toPrint){
@@ -111,9 +111,9 @@ PREVEDONO L'INPUT DI DUE PUNTATORI A VOID CHE SUBISCONO UN CAST VERSO IL TIPO PR
 IN SEGUITO CONFRONTANO I DUE INPUT
 ***/
 int compareInteger(void* a, void* b){
-    if((((int*)a))==(((int*)b)))
+    if((*((int*)a))==(*((int*)b)))
         return 0;
-    if((((int*)a))<(((int*)b)))
+    if((*((int*)a))<(*((int*)b)))
         return -1;
     return 1;
 }
@@ -154,7 +154,7 @@ void* copyString(void* cop, void* original){
 
 void* copyInteger(void* cop, void* original){
     cop=(int*)malloc(sizeof(int));
-    cop=(int*)(original);
+    (*(int*)cop)=*((int*)(original));
     return cop;
 }
 

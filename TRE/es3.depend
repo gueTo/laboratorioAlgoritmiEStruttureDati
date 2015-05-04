@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1430761606 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.c
+	<stdio.h>
+	<stdlib.h>
+	"ARBIterative.h"
+
+1430761363 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\es3.c
+	<stdio.h>
+	<stdlib.h>
+	"ARBIterative.h"
+
+1429720092 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.c
+	<stdio.h>
+	<stdlib.h>
+	"lifo.h"
+
+1429561031 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.h
+
+1429549443 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1430216369 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.h
+
+1430761374 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lifo.h"
+	"data.h"
+

@@ -17,7 +17,6 @@ void deleteFloat(void*);
 void* casualInteger();
 void* casualFloat();
 void* casualString();
-void* copyString();
-void* copyInteger();
-void* copyFloat();
-
+void* copyString(void*, void*);
+void* copyInteger(void*, void*);
+void* copyFloat(void*, void*);

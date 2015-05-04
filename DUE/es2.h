@@ -5,7 +5,20 @@ typedef void(* FUNPRINT)(void*);
 typedef void(*FUNDEL)(void*);
 typedef void*(*FUNRAND)();
 typedef void*(*FUNCPY)(void*, void*);
-typedef int(FUNODD)(void*, int);
+typedef int(*FUNODD)(void*, int);
+
+
+typedef struct func
+{
+	FUNINS fins;
+	FUNCPY fcopy;
+   	FUNRAND frand;
+   	FUNCOM fcomp;
+   	FUNODD fodd;
+   	FUNPRINT fpri;
+   	FUNDEL funfree;
+   	int ty;
+}FUNCT;
 
 typedef struct ARBType{
     void* element;
@@ -14,24 +27,27 @@ typedef struct ARBType{
 }ARB;
 
 
-ARB* newARBNode(void*, FUNCPY);
-ARB* freeARBNode(ARB*, FUNDEL);
+FUNCT *initFUNCT();
+void FUNCTtype(FUNCT* , int);
+FUNCT* deleteFUNCT(FUNCT*);
+
+
+ARB* newARBNode(void*, FUNCT*);
+ARB* freeARBNode(ARB*, FUNCT*);
 ARB* detachMin(ARB*, ARB*);
-ARB* adjustARB(ARB*, FUNDEL);
+ARB* adjustARB(ARB*, FUNCT*);
 int countARBNode(ARB*);
 
-ARB* insertARBNode(ARB*, void*, FUNCOM, FUNCPY);
-void printARB(ARB*, FUNPRINT);
-ARB* deleteAllKey(ARB*, FUNDEL);
-ARB* searchStringAndDelete(ARB*, void*, FUNCOM, FUNDEL);
-ARB* searchConditionAndDeleteARB(ARB*, char*, char*, int, FUNCOM, FUNODD, FUNDEL);
-ARB* casualARB(ARB*, int, FUNRAND, FUNCOM, FUNCPY);
-ARB* duplicateARB(ARB*, FUNCPY);
-int controlSameARB(ARB*, ARB*, FUNCOM);
-void** vectorizeFunction(ARB*, void**, int*, FUNCPY);
-void** vectorizeARB(ARB*, FUNCPY);
-ARB* balanceFunction(void**, int, int, ARB*, FUNCOM, FUNCPY);
-ARB* balanceARB(ARB*, FUNCOM, FUNCPY);
-int oddInteger(void*, int);
-int oddString(void*, int);
+ARB* insertARBNode(ARB*, void*, FUNCT*);
+void printARB(ARB*, FUNCT*);
+ARB* deleteAllKey(ARB*, FUNCT*);
+ARB* searchStringAndDelete(ARB*, void*, FUNCT*);
+ARB* searchConditionAndDeleteARB(ARB*, char*, char*, int, FUNCT*);
+ARB* casualARB(ARB*, int, FUNCT*);
+ARB* duplicateARB(ARB*, FUNCT*);
+int controlSameARB(ARB*, ARB*, FUNCT*);
+void** vectorizeFunction(ARB*, void**, int*, FUNCT*);
+void** vectorizeARB(ARB*, FUNCT*);
+ARB* balanceFunction(void**, int, int, ARB*, FUNCT*);
+ARB* balanceARB(ARB*, FUNCT*);
 
