@@ -163,3 +163,16 @@ void* copyFloat(void* cop, void* original){
     (*(float*)cop)=*((float*)(original));
     return cop;
 }
+
+
+int oddInteger(void* isOdd, int odd){
+    return(((*(int*)isOdd)%2)==odd);
+}
+
+int oddFloat(void* isOdd, int odd){
+    return((((int)((*(float*)isOdd)))%2)==odd);
+}
+
+int oddString(void* isOdd, int odd){
+    return((strlen((char*)isOdd)%2)==odd);
+}

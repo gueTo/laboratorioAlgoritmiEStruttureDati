@@ -20,3 +20,6 @@ void* casualString();
 void* copyString(void*, void*);
 void* copyInteger(void*, void*);
 void* copyFloat(void*, void*);
+int oddInteger(void*, int);
+int oddFloat(void*, int);
+int oddString(void*, int);

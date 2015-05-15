@@ -8,8 +8,7 @@ typedef void*(*FUNCPY)(void*, void*);
 typedef int(*FUNODD)(void*, int);
 
 
-typedef struct func
-{
+typedef struct func{
 	FUNINS fins;
 	FUNCPY fcopy;
    	FUNRAND frand;

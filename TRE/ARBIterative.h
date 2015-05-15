@@ -12,8 +12,19 @@ typedef void(* FUNPRINT)(void*);
 typedef void(*FUNDEL)(void*);
 typedef void*(*FUNRAND)();
 typedef void*(*FUNCPY)(void*, void*);
-typedef int(FUNODD)(void*, int);
+typedef int(*FUNODD)(void*, int);
 
+
+typedef struct func{
+	FUNINS fins;
+	FUNCPY fcopy;
+   	FUNRAND frand;
+   	FUNCOM fcomp;
+   	FUNODD fodd;
+   	FUNPRINT fpri;
+   	FUNDEL funfree;
+   	int ty;
+}FUNCT;
 
 typedef struct ARBType{
     void* element;
@@ -21,11 +32,15 @@ typedef struct ARBType{
     struct ARBType* dx;
 }ARB;
 
+typedef struct boundArray{
+    int i;
+    int j;
+}boundArray;
 
 /****/
 
-ARB* newARBNode(void*, FUNCPY);
-ARB* freeARBNode(ARB*, FUNDEL);
+ARB* newARBNode(void*, FUNCT*);
+ARB* freeARBNode(ARB*, FUNCT*);
 int countARBNode(ARB*);
 
 /****/
@@ -33,20 +48,20 @@ int countARBNode(ARB*);
 
 
 
-ARB* insertARBNodeIterative(ARB*, void*, FUNCOM, FUNCPY);
-ARB* deleteARBIterative(ARB*, FUNDEL);
-void preOrderARBIter(ARB*, FUNPRINT);
-void inOrderARBIter(ARB*, FUNPRINT);
-void postOrder(ARB*, FUNPRINT);
-ARB* searchAndDeleteIterative(ARB*, void*, FUNCOM, FUNDEL);
+ARB* insertARBNodeIterative(ARB*, void*, FUNCT*);
+ARB* deleteARBIterative(ARB*, FUNCT*);
+void preOrderARBIter(ARB*, FUNCT*);
+void inOrderARBIter(ARB*, FUNCT*);
+void postOrder(ARB*, FUNCT*);
+ARB* searchAndDeleteIterative(ARB*, void*, FUNCT*);
 
-ARB* deleteNodeIter(ARB*, FUNDEL);
-ARB* searchConditionAndDeleteIterative(ARB*, char*, char*, int, FUNCOM, FUNODD, FUNDEL);
-ARB* duplicateARBIterative(ARB*, ARB*, FUNCOM, FUNCPY);
-int controlSameARB(ARB*, ARB*, FUNCOM);
-int controlSameARBIterative(ARB*, ARB*, FUNCOM);
+ARB* deleteNodeIter(ARB*, FUNCT*);
+ARB* searchConditionAndDeleteIterative(ARB*, char*, char*, int, FUNCT*);
+ARB* duplicateARBIterative(ARB*, ARB*, FUNCT*);
+int controlSameARB(ARB*, ARB*, FUNCT*);
+int controlSameARBIterative(ARB*, ARB*, FUNCT*);
 int countARBNodeIterative(ARB*);
 
-void** vectorizeARBIterative(ARB*, FUNCPY);
+void** vectorizeARBIterative(ARB*, FUNCT*);
 
-ARB* balanceARBIterative(ARB* toBalance, FUNCOM compare, FUNCPY fcopy);
+ARB* balanceARBIterative(ARB*, FUNCT*);

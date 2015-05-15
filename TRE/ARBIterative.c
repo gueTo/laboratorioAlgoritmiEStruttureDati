@@ -2,92 +2,181 @@
 #include <stdlib.h>
 #include "ARBIterative.h"
 
-/**CREAZIONE NUOVO NODO**/
-ARB* newARBNode(void* toInsert, FUNCPY fcopy){
+/***/
+
+
+
+
+FUNCT *initFUNCT(){
+	FUNCT *ret=(FUNCT *)malloc(sizeof(FUNCT));
+   	ret->fcomp=NULL;
+   	ret->fcopy=NULL;
+   	ret->fins=NULL;
+   	ret->fodd=NULL;
+    ret->frand=NULL;
+    ret->funfree=NULL;
+    ret->fpri=NULL;
+    ret->ty=-1;
+	return ret;
+}
+
+void FUNCTtype(FUNCT* ret, int type){
+	if(type==1){
+        ret->fcomp=&compareInteger;
+        ret->fcopy=&copyInteger;
+        ret->fins=&insertInteger;
+        ret->fodd=&oddInteger;
+        ret->frand=&casualInteger;
+        ret->funfree=&deleteInteger;
+        ret->fpri=&printInteger;
+        ret->ty=1;
+	}
+	if(type==2){
+        ret->fcomp=&compareFloat;
+        ret->fcopy=&copyFloat;
+        ret->fins=&insertFloat;
+        ret->fodd=&oddFloat;
+        ret->frand=&casualFloat;
+        ret->funfree=&deleteFloat;
+        ret->fpri=&printFloat;
+        ret->ty=2;
+	}
+	if(type==3){
+        ret->fcomp=&compareString;
+        ret->fcopy=&copyString;
+        ret->fins=&insertString;
+        ret->fodd=&oddString;
+        ret->frand=&casualString;
+        ret->funfree=&deleteString;
+        ret->fpri=&printString;
+        ret->ty=3;
+	}
+}
+
+FUNCT* deleteFUNCT(FUNCT* toDel){
+    free(toDel);
+    return NULL;
+}
+
+/***/
+/**CREAZIONE 1NUOVO NODO**/
+ARB* newARBNode(void* toInsert, FUNCT* funList){
     ARB* newNode=NULL;
     newNode=(ARB*)malloc(sizeof(ARB));//ALLOCAZIONENUOVO NODO
-    newNode->element=fcopy(newNode->element, toInsert);//ALLOCAZIONE MEMORIA PER LA STRINGA DA INSERIRE
+    newNode->element=funList->fcopy(newNode->element, toInsert);//ALLOCAZIONE MEMORIA PER LA STRINGA DA INSERIRE
     newNode->sx=NULL;
     newNode->dx=NULL;
     return newNode;
 }
 
 /***DEALLOCAZIONE NODO***/
-ARB* freeARBNode(ARB* node, FUNDEL del){
-    del(node->element);
+ARB* freeARBNode(ARB* node, FUNCT* funList){
+    funList->funfree(node->element);
     free(node);
     return NULL;
 }
 
-int countARBNode(ARB* ROOT){
-	if(ROOT!=NULL){
-		return 1+countARBNode(ROOT->sx)+countARBNode(ROOT->dx);
-	}else return 0;
-}
-/*****************FUNZIONI RICHIESTE********************/
 
-ARB* insertARBNodeIterative(ARB* ROOT, void* toIns, FUNCOM compare, FUNCPY fcopy){
+/*****************FUNZIONI RICHIESTE********************/
+/**come richiesto, tutte le istruzioni di ricorsione sono state
+"virtualizzate", dove necessario tramite la struttura dati chiamata STACK**/
+
+ARB* insertARBNodeIterative(ARB* ROOT, void* toIns, FUNCT* funList){
     ARB* temp;
-    lifo* stackTree;
+    ARB* dad=NULL;
+    //serve per fermare il ciclo
     int stop;
+    //serve per tenere memoria del risultato della comparazione
     int cmp;
+    //controllo se l'albero ha già dei nodi
     if(ROOT!=NULL){
         temp=ROOT;
-        stackTree=(lifo*)malloc(sizeof(lifo));
+        //viene creato lo stack
         stop=0;
         cmp=0;
+        //si scorre l'albero tramite stack
         while(stop!=1 && temp!=NULL){
-            cmp=compare(temp->element, toIns);
-            stackTree=lifoPush(stackTree, temp);
+            //compara l'elemento corrente con quello da inserire
+            //per poter navigare nell'albero
+            cmp=funList->fcomp(temp->element, toIns);
+            //conservo il nodo corrente come padre
+            dad=temp;
+            //e vado a considerare il prossimo
             if(cmp<0){
                 temp=temp->dx;
             }else if(cmp>0){
                 temp=temp->sx;
-            }else stop=1;
+            }else stop=1;//se l'elemento è lo stesso il ciclo termina
         }
+        //se invece si arriva ad una foglia, si recupera il padre
         if(temp==NULL){
-            temp=(ARB*)((lifoTop(stackTree))->element);
+            //e a seconda del valore di cmp inserisco a destra o a sinistra
             if(cmp<0)
-                temp->dx=newARBNode(toIns, fcopy);
+                dad->dx=newARBNode(toIns, funList);
             else
-                temp->sx=newARBNode(toIns, fcopy);
+                dad->sx=newARBNode(toIns, funList);
         }
     }else{
-        ROOT=newARBNode(toIns, fcopy);
+        ROOT=newARBNode(toIns, funList);
     }
     return ROOT;
 }
 
-ARB* deleteARBIterative(ARB* ROOT, FUNDEL fdelete){
+/**questa cancellazione fa uso dello stack per tenere traccia
+dei figli del nodo che si andaranno a cancellare**/
+ARB* deleteARBIterative(ARB* ROOT, FUNCT* funList){
+    //vengono usate due variabili puntatori a lifo
+    //una per lo stack vero e proprio
+    //l'altra, topStack, per una più comoda lettura del codice
+    //visto che serve solo per vedere il corrente top dello stack
     lifo* stackTree=NULL;
     lifo* topStack=NULL;
+    // toControl serve anch'esso per una migliore lettura del codice
+    //e tiene traccia solo del nodo dell'albero che stiamo considerando un quel momento
     ARB* toControl=NULL;
     if(ROOT!=NULL){
+        //se l'albero non è vuoto allora metto nello stack la radice
         stackTree=lifoPush(stackTree, ROOT);
+        //si cicla finché lo stack non è vuoto
+        //ovvero dopo che ho visitato tutto l'albero
         while(!lifoIsEmpty(stackTree)){
+            //prendo l'elemento in cima
             topStack=lifoTop(stackTree);
+            //ne estraggo l'elemento, in questo caso il nodo dell'albero
             toControl=(ARB*)(topStack->element);
+            //ed estraggo il primo elemento dello stack
             stackTree=lifoPop(stackTree);
+            //dato che deve essere cancellato tutto l'albero
+            //vengono inseriti nello stack entrambi i figli
+            //del nodo corrente, se presenti
             if(toControl->sx!=NULL){
                 stackTree=lifoPush(stackTree, toControl->sx);
             }
             if(toControl->dx!=NULL){
                 stackTree=lifoPush(stackTree, toControl->dx);
             }
-            fdelete(toControl->element);
+            //dopodiché si dealloca l'elemento presente nel nodo
+            funList->funfree(toControl->element);
+            //e poi il nodo stesso
             free(toControl);
             toControl=NULL;
         }
+        //non ce n'è bisogno, ma viene deallocato tutto lo stack
         deleteLifo(stackTree);
     }
     return NULL;
 }
 
-void preOrderARBIter(ARB* toPrint, FUNPRINT print){
+
+//pure qua viene utilizzato lo stack per la visita in pre order dell'albero
+void preOrderARBIter(ARB* toPrint, FUNCT* funList){
+    //è identico all'algoritmo precedente(cancellazione completa dell'albero)
+    //ma invece di cancellare il nodo dopo aver messo nello stack i figli
+    //esso viene visitato, in questo caso letto e stampao a video
+    lifo* temp=NULL;
+    lifo* stackTree=NULL;
+    ARB* toVisit=NULL;
     if(toPrint!=NULL){
-        lifo* temp=NULL;
-        lifo* stackTree=NULL;
-        ARB* toVisit=NULL;
         stackTree=lifoPush(stackTree, toPrint);
         while(!lifoIsEmpty(stackTree)){
             temp=lifoTop(stackTree);
@@ -99,110 +188,153 @@ void preOrderARBIter(ARB* toPrint, FUNPRINT print){
             if(toVisit->sx!=NULL){
                 stackTree=lifoPush(stackTree, toVisit->sx);
             }
-            print(toVisit->element);
+            funList->fpri(toVisit->element);
             printf("\n");
         }
     }
 }
 
-void inOrderARBIter(ARB* toPrint, FUNPRINT print){
-    lifo* stackT=NULL;
-    lifo* temp;
-    ARB* curr;
+void inOrderARBIter(ARB* toPrint, FUNCT* funList){
+    lifo* stackTree=NULL;
+    lifo* temp=NULL;
+    ARB* current=NULL;
     if(toPrint!=NULL){
-        curr=toPrint;
-        while(stackT!=NULL || curr!=NULL){
-            if(curr!=NULL){
-                stackT=lifoPush(stackT, curr);
-                curr=curr->sx;
+        current=toPrint;
+        //per la visita in order verrà scorso tutto l'albero nel ramo sinistro
+        //dopodichè, risalendo nello stesso si visiterà il nodo corrente e si
+        //inserirà nello stack il figlio destro del nodo
+        //a quel punto di quel sottoalbero verranno presi in considerazione
+        //prima i figli sinistri, poi le radici di eventuali sottoalberi
+        //e poi quelli destri
+        while(!lifoIsEmpty(stackTree)|| current!=NULL){
+            if(current!=NULL){
+                //praticamente va a sinistra fintanto c'è un figlio
+                stackTree=lifoPush(stackTree, current);
+                current=current->sx;
             }else{
-                temp=lifoTop(stackT);
-                curr=(ARB*)(temp->element);
-                stackT=lifoPop(stackT);
+                //se non c'è prende l'elemento in cima allo stack
+                temp=lifoTop(stackTree);
+                current=(ARB*)(temp->element);
+                stackTree=lifoPop(stackTree);
+                //lo visita
+                funList->fpri(current->element);
                 printf("\n");
-                print(curr->element);
-                curr=curr->dx;
+                //e comincia ad andare a destra
+                current=current->dx;
+                //a quel punto se a destra è null, continua a risalire
+                //nell'albero principale, se invece è radice di un altro
+                //sottoalbero, viene messo nello stack e comincia a scorrere verso sinistra
             }
         }
     }
 }
 
-void postOrder(ARB* toPrint, FUNPRINT print){
-    lifo* stackT=NULL;
-    lifo* temp;
-    ARB* curr=toPrint;
+void postOrder(ARB* toPrint, FUNCT* funList){
+    lifo* stackTree=NULL;
+    lifo* temp=NULL;
+    ARB* current=NULL;
     ARB* last=NULL;
     if(toPrint!=NULL){
-        while(stackT!=NULL || curr!=NULL){
-            if(curr!=NULL){
-                stackT=lifoPush(stackT, curr);
-                curr=curr->sx;
+        current=toPrint;
+        while(stackTree!=NULL || current!=NULL){
+            if(current!=NULL){
+                stackTree=lifoPush(stackTree, current);
+                current=current->sx;
+                //come per la visita inOrder, anche qui si scorre
+                //prima tutto il ramo sinistro del nodo corrente
             }else{
-                temp=lifoTop(stackT);
-                curr=(ARB*)(temp->element);
-                if(curr->dx==NULL || last==curr->dx){
-                    last=curr;
+                //se non esistono più figli sinsitri si estrae la
+                //testa dello stack
+                temp=lifoTop(stackTree);
+                current=(ARB*)(temp->element);
+                //a questo punto se ci troviamo in una foglia
+                //o abbiamo già visitato il sottoalbero destro
+                //visitiamo il nodo corrente
+                if(current->dx==NULL || last==current->dx){
+                    funList->fpri(current->element);
                     printf("\n");
-                    print(curr->element);
-                    stackT=lifoPop(stackT);
-                    curr=NULL;
+                    //con last ricordiamo di essere già passati
+                    //in questo sottoalbero destro
+                    last=current;
+                    stackTree=lifoPop(stackTree);
+                    current=NULL;
                 }else{
-                    curr=curr->dx;
+                    //nel caso non sia ne' una foglia, ne' un nodo già visitato
+                    //scorriamo a destra
+                    current=current->dx;
                 }
             }
         }
     }
 }
 
-ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCOM compare, FUNDEL fdel){
+//cancellazione di un elemento richiesto
+ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCT* funList){
     ARB* dad=NULL;
     ARB* current=ROOT;
     ARB* find=NULL;
     void* temp;
-    while(current!=NULL && compare(current->element, key)!=0){
+    //fintanto che l'albero non è finito o è stato trovato l'elemento
+    //si continua a navigare un ramo dell'albero
+    while(current!=NULL && funList->fcomp(current->element, key)!=0){
         dad=current;
-        if(compare(current->element, key)==1){
+        if(funList->fcomp(current->element, key)==1){
             current=current->sx;
         }else{
             current=current->dx;
         }
     }
+    //finito il ciclo
+
+    //se l'elemento non è stato trovato, si ritorna
     if(current==NULL){//non trovato
         return ROOT;
     }else{
+        //altrimenti si setta la variabile find col nodo trovato
         find=current;//trovato
     }
+    //adesso, si controlla se il nodo trovato è una foglia
     if(find->sx==NULL && find->dx==NULL){//foglia
+        //potrebbe essere la radice di un albero con un solo nodo
         if(find==ROOT){
+            //lo si cancella e si ritorna NULL
             ROOT=NULL;
-            fdel(find->element);
+            funList->funfree(find->element);
             free(find);
             return NULL;
         }else{
+            //altrimenti controlliamo se è figlio destro o sinistro del padre
             if(find==dad->dx){
                 dad->dx=NULL;
             }else {
                 dad->sx=NULL;
             }
-            fdel(find->element);
+            //a quel punto cancelliamo il collegamento tra il padre e il figlio
+            //e deallochiamo quest'ultimo
+            funList->funfree(find->element);
             free(find);
             return ROOT;
         }
     }
-    //find ancora uguale a curr
+    //ma se non è una foglia?
+    //allora cercom il minimo nel sottoalbero destro
     if(find->dx!=NULL){
+        /**perché ho deciso di salvarmi il padre?**/
         dad=current;
         current=current->dx;
+        //se il sottoalbero preso in considerazione
+        //non ha un ramo sinistro, si sostituisce
+        //questo nodo, col suo figlio destro
         if(current->sx==NULL){
-           temp=find->element;
-           find->element=current->element;
-           current->element=temp;
-          // dad->dx=NULL;
+            temp=find->element;
+            find->element=current->element;
+            current->element=temp;
             dad->dx=current->dx;
-
-           fdel(current->element);
-           free(current);
+            funList->funfree(current->element);
+            free(current);
         }else{
+            //se invece un sottoalbero sinistro
+            //scorro il ramo sinistro
             while(current->sx!=NULL){
                 dad=current;
                 current=current->sx;
@@ -211,25 +343,29 @@ ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCOM compare, FUNDEL fdel)
             temp=find->element;
             find->element=current->element;
             current->element=temp;
-            fdel(current->element);
+            funList->funfree(current->element);
             free(current);
         }
+        //in entrambi i casi alla fine sostituisco il nodo trovato
+        //con il minimo, e sostituisco il primo
         return ROOT;
     }else{
         dad->sx=find->sx;
-        fdel(find->element);
+        funList->funfree(find->element);
         free(find);
         return ROOT;
     }
 }
 
-ARB* deleteNodeIter(ARB* ROOT, FUNDEL fdel){
+/**Cancellazione come sopra**/
+ARB* deleteNodeIter(ARB* ROOT, FUNCT* funList){
     ARB* current=ROOT;
-    ARB* dad;
+    ARB* dad=NULL;
     void* temp;
+    temp=NULL;
     if(ROOT!=NULL){
         if(current->dx==NULL && current->sx==NULL){
-            fdel(ROOT->element);
+            funList->funfree(ROOT->element);
             free(ROOT);
             return NULL;
         }else if(current->dx!=NULL){
@@ -246,13 +382,13 @@ ARB* deleteNodeIter(ARB* ROOT, FUNDEL fdel){
                 ROOT->element=current->element;
                 current->element=ROOT->element;
                 dad->sx=current->dx;
-                fdel(current->element);
+                funList->funfree(current->element);
                 free(current);
             }
         }else{
             current=ROOT;
             ROOT=ROOT->sx;
-            fdel(current->element);
+            funList->funfree(current->element);
             free(current);
         }
     }
@@ -260,14 +396,18 @@ ARB* deleteNodeIter(ARB* ROOT, FUNDEL fdel){
 }
 
 
-ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCOM compare, FUNODD fodd, FUNDEL fdel){
+ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCT* funList){
     ARB* dad=NULL;
     ARB* current=ROOT;
     lifo* stack=NULL;
     lifo* popped;
     stack=lifoPush(stack, NULL);//dad
     stack=lifoPush(stack, ROOT);//current
+    /**dato che serve sapere il padre di ogni nodo
+    che considero in quel momento, faccio ogni volta
+    un doppio push con un doppio pop quando mi serve**/
     while(stack!=NULL){
+        /**doppio pop: nodo considerato e suo padre**/
         popped=lifoTop(stack);
         current=(ARB*)(popped->element);
         stack=lifoPop(stack);
@@ -275,41 +415,50 @@ ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, in
         dad=(ARB*)(popped->element);
         stack=lifoPop(stack);
         if(current!=NULL){
-            if(compare(current->element, strMin)>=0 && compare(current->element, strMax)<=0){
-                if(fodd(current->element, odd)){
+            /**controllo se si trova tra i due estremi**/
+            if(funList->fcomp(current->element, strMin)>=0 && funList->fcomp(current->element, strMax)<=0){
+                /**se lo è controllo se è pari**/
+                if(funList->fodd(current->element, odd)){
+                    /**poi cancello**/
+                    /**faccio i controlli e chiamo la funzione preparata prima**/
                     if(dad==NULL){
-                        ROOT=deleteNodeIter(ROOT, fdel);
+                        ROOT=deleteNodeIter(ROOT, funList);
                         current=ROOT;
                         dad=NULL;/****cancello in testa, quindi ripristino***/
                     }else{
                         if(dad->sx==current){
-                            current=deleteNodeIter(current, fdel);
+                            current=deleteNodeIter(current, funList);
                             dad->sx=current;
                         }else if(dad->dx==current){
-                                current=deleteNodeIter(current, fdel);
+                                current=deleteNodeIter(current, funList);
                                 dad->dx=current;
                         }
                     }
+                    /**doppio push di nodo padre e corrente**/
                     stack=lifoPush(stack, dad);
                     stack=lifoPush(stack, current);
                 }else{
-                    if(compare(current->element, strMin)>0){
+                    /**altrimenti coi controlli scendo a destra o a sinistra**/
+                    if(funList->fcomp(current->element, strMin)>0){
                         stack=lifoPush(stack, current);
                         stack=lifoPush(stack, current->sx);
                     }
-                    if(compare(current->element, strMax)<0){
+                    if(funList->fcomp(current->element, strMax)<0){
                         stack=lifoPush(stack, current);
                         stack=lifoPush(stack, current->dx);
                     }
                 }
             }else{
-                if(compare(current->element, strMin)>0){
+                /**qua invece entro se il nodo corrente
+                non è compreso fre i due estremi**/
+                /**e faccio i controlli su dove scendere**/
+                if(funList->fcomp(current->element, strMin)>0){
                         if(current->sx!=NULL){
                             stack=lifoPush(stack, current);
                             stack=lifoPush(stack, current->sx);
                         }
                 }
-                if(compare(current->element, strMax)<0){
+                if(funList->fcomp(current->element, strMax)<0){
                         if(current->dx!=NULL){
                             stack=lifoPush(stack, current);
                             stack=lifoPush(stack, current->dx);
@@ -318,11 +467,14 @@ ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, in
             }
         }
     }
+    //alla fine pulisco lo stack
     deleteLifo(stack);
     return ROOT;
 }
 
-ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCOM compare, FUNCPY fcopy){
+/**funziona come la visita preorder, ma copio il nodo corrente
+in un nuovo nodo che inserisco nel nuovo albero**/
+ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCT* funList){
     lifo* stackD=NULL;
     lifo* temp;
     ARB* current=original;
@@ -332,7 +484,7 @@ ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCOM compare, FUNCPY fcop
             temp=lifoTop(stackD);
             current=(ARB*)(temp->element);
             stackD=lifoPop(stackD);
-            copy=insertARBNodeIterative(copy, current->element, compare, fcopy);
+            copy=insertARBNodeIterative(copy, current->element, funList);
             if(current->dx!=NULL){
                 stackD=lifoPush(stackD, current->dx);
             }
@@ -344,7 +496,9 @@ ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCOM compare, FUNCPY fcop
     return copy;
 }
 
-int controlSameARBIterative(ARB* one, ARB* two, FUNCOM compare){
+/**controllo scendendo nell'albero se i nodi sono uguali pushando
+contemporaneamente i candidati uguali, se sono diversi o come forma o come dato, esco dal ciclo*/
+int controlSameARBIterative(ARB* one, ARB* two, FUNCT* funList){
     int ret=1;
 //    int i=0;
     lifo* stackC=NULL;
@@ -361,7 +515,7 @@ int controlSameARBIterative(ARB* one, ARB* two, FUNCOM compare){
             temp=lifoTop(stackC);
             tOne=(ARB*)(temp->element);
             stackC=lifoPop(stackC);
-            if(compare(tOne->element, tTwo->element)==0){
+            if(funList->fcomp(tOne->element, tTwo->element)==0){
                 if(tOne->dx!=NULL && tTwo->dx!=NULL){
                     stackC=lifoPush(stackC, tOne->dx);
                     stackC=lifoPush(stackC, tTwo->dx);
@@ -377,7 +531,11 @@ int controlSameARBIterative(ARB* one, ARB* two, FUNCOM compare){
             }else ret=0;
         }
     }
+    /**se esce senza problemi dal ciclo allo ret=1 altrimenti se incontra problemi ret=0**/
+
+    /**dealloco lo stack eventualmente non vuoto**/
     stackC=deleteLifo(stackC);
+    //ritorno ret
     return ret;
 }
 
@@ -388,6 +546,7 @@ int countARBNodeIterative(ARB* ROOT){
     ARB* curr;
     int n=0;
     if(ROOT!=NULL){
+        //visito in pre order e ogni pop aumento il contatore di 1
         stack=lifoPush(stack, ROOT);
         while(stack!=NULL){
             temp=lifoTop(stack);
@@ -405,8 +564,9 @@ int countARBNodeIterative(ARB* ROOT){
     return n;
 }
 
+/**visita in order con copia nel vettore dell'albero**/
 
-void** vectorizeARBIterative(ARB* toVectorize, FUNCPY fcopy){
+void** vectorizeARBIterative(ARB* toVectorize, FUNCT* funList){
     int size=countARBNodeIterative(toVectorize);
     void** result;
     int n=0;
@@ -414,7 +574,6 @@ void** vectorizeARBIterative(ARB* toVectorize, FUNCPY fcopy){
     lifo* temp;
     ARB* curr;
     result=(void**)malloc(sizeof(void*)*size);
-
     if(toVectorize!=NULL){
         curr=toVectorize;
         while(stackT!=NULL || curr!=NULL){
@@ -425,57 +584,60 @@ void** vectorizeARBIterative(ARB* toVectorize, FUNCPY fcopy){
                 temp=lifoTop(stackT);
                 curr=(ARB*)(temp->element);
                 stackT=lifoPop(stackT);
-                result[n]=fcopy(result[n], curr->element);
+                result[n]=funList->fcopy(result[n], curr->element);
                 n++;
                 curr=curr->dx;
             }
         }
     }
-
-
     return result;
 }
 
-
-ARB* balanceARBIterative(ARB* toBalance, FUNCOM compare, FUNCPY fcopy){
+/**sarebbe meglio creare una struttura per gli estremi**/
+ARB* balanceARBIterative(ARB* toBalance, FUNCT* funList){
+    /**costruisce prima l'array contenente i nodi dell'albero da bilanciare**/
     int n=countARBNodeIterative(toBalance);
     int i, j, k;
     lifo* stackB=NULL;
     ARB* balanced=NULL;
+    boundArray* bpop;
+    boundArray* bpush;
+    //uso gli indici i e j come estremi delle posizioni dell'array da considerare
     i=0;
     j=n-1;
-    int ti, tj;
     lifo* t;
-    printf("\n%d\n\n\n", j);
-    stackB=lifoPush(stackB,i);
-    stackB=lifoPush(stackB,j);
-    void**vect=vectorizeARBIterative(toBalance, fcopy);
-    int o=0;
-    for(o=0; o<n; o++){
-        printString(vect[o]);
-        printf("\n");
-    }
+    //e sonogli indici che vengono inseriti di volta in volta nello stack
+    bpush=(boundArray*)malloc(sizeof(boundArray));
+    bpush->i=i;
+    bpush->j=j;
+    stackB=lifoPush(stackB, bpush);
+    void**vect=vectorizeARBIterative(toBalance, funList);
     while(stackB!=NULL){
+        //in ogni iterazione del ciclo vengono estratti due indici inseriti
         t=lifoTop(stackB);
-        j=(int*)(t->element);
+        bpop=(boundArray*)(t->element);
+        i=bpop->i;
+        j=bpop->j;
+        free(bpop);
         stackB=lifoPop(stackB);
-        t=lifoTop(stackB);
-        i=(int*)(t->element);
-        stackB=lifoPop(stackB);
-        printf("\ni:%d j:%d\n", i, j);
         if(i<=j){
             k=(i+j)/2;
-            printString(vect[k]);
-            printf("\n");
-            balanced=insertARBNodeIterative(balanced, vect[k], compare, fcopy);
+            //grazie a loro viene calcolato il valore della posizione
+            //alla quale accedere per prendere il nodo da inserire
+            //nell'albero bilanciato
+            balanced=insertARBNodeIterative(balanced, vect[k], funList);
             k=k-1;
-            stackB=lifoPush(stackB,i);
-            stackB=lifoPush(stackB,k);
+            bpush=(boundArray*)malloc(sizeof(boundArray));
+            bpush->i=i;
+            bpush->j=k;
+            stackB=lifoPush(stackB, bpush);
             k=k+2;
-            stackB=lifoPush(stackB, k);
-            stackB=lifoPush(stackB, j);
+            bpush=(boundArray*)malloc(sizeof(boundArray));
+            bpush->i=k;
+            bpush->j=j;
+            stackB=lifoPush(stackB, bpush);
+            //vengono ricalcolati gli indici e inseriti come estremi nello stack
         }
     }
-    preOrderARBIter(balanced, printString);
     return 0;
 }

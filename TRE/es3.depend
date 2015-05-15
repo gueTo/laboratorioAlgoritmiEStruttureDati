@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1430761606 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.c
+1431714123 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.c
 	<stdio.h>
 	<stdlib.h>
 	"ARBIterative.h"
 
-1430761363 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\es3.c
+1431714400 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\es3.c
 	<stdio.h>
 	<stdlib.h>
 	"ARBIterative.h"
@@ -16,16 +16,16 @@
 
 1429561031 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.h
 
-1429549443 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.c
+1431713053 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"data.h"
 
-1430216369 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.h
+1431713053 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.h
 
-1430761374 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.h
+1431714217 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
