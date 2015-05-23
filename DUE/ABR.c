@@ -3,13 +3,13 @@
 #include <string.h>
 #include <time.h>
 #include "data.h"
-#include "es2.h"
+#include "ABR.h"
 
 /*****FUNZIONI*****/
 
-FUNCT *initFUNCT()
+FUNCTDATA *initFUNCTDATA()
 {
-	FUNCT *ret=(FUNCT *)malloc(sizeof(FUNCT));
+	FUNCTDATA *ret=(FUNCTDATA *)malloc(sizeof(FUNCTDATA));
    	ret->fcomp=NULL;
    	ret->fcopy=NULL;
    	ret->fins=NULL;
@@ -22,7 +22,7 @@ FUNCT *initFUNCT()
 }
 
 
-void FUNCTtype(FUNCT* ret, int type){
+void FUNCTDATAtype(FUNCTDATA* ret, int type){
 	if(type==1){
         ret->fcomp=&compareInteger;
         ret->fcopy=&copyInteger;
@@ -55,14 +55,14 @@ void FUNCTtype(FUNCT* ret, int type){
 	}
 }
 
-FUNCT* deleteFUNCT(FUNCT* toDel){
+FUNCTDATA* deleteFUNCTDATA(FUNCTDATA* toDel){
     free(toDel);
     return NULL;
 }
 
 
 /**CREAZIONE NUOVO NODO**/
-ARB* newARBNode(void* toInsert, FUNCT* funList){
+ARB* newARBNode(void* toInsert, FUNCTDATA* funList){
     ARB* newNode=NULL;
     newNode=(ARB*)malloc(sizeof(ARB));//ALLOCAZIONENUOVO NODO
     newNode->element=funList->fcopy(newNode->element, toInsert);//ALLOCAZIONE MEMORIA PER LA STRINGA DA INSERIRE
@@ -72,7 +72,7 @@ ARB* newARBNode(void* toInsert, FUNCT* funList){
 }
 
 /***DEALLOCAZIONE NODO***/
-ARB* freeARBNode(ARB* node, FUNCT* funList){
+ARB* freeARBNode(ARB* node, FUNCTDATA* funList){
     funList->funfree(node->element);
     free(node);
     return NULL;
@@ -97,7 +97,7 @@ ARB* detachMin(ARB* son, ARB* dad){
     return son;
 }
 
-ARB* adjustARB(ARB* ROOT, FUNCT* funList){
+ARB* adjustARB(ARB* ROOT, FUNCTDATA* funList){
     //SI CERCA IL NODO ADATTO DA SCMBIARE CON QUELLO CHE DEVE
     //ESSERE CANCELLATO, IN SEGUITO SI SOSTITUISCONO I DATI
     //TRA I DUE NODI E SI DEALLOCA IL CANDIDATO ALLA SOSTITUZIONE
@@ -135,7 +135,7 @@ int countARBNode(ARB* ROOT){
 1. inserimento di una stringa data in un ARB dato;
 ***/
 //NAVIGAZIONE RICORSIVA A DESTRA O A SINISTRA SECONDO UN ORDINE ALFANUMERICO ABITUALE
-ARB* insertARBNode(ARB* ROOT, void* toInsert, FUNCT* funList){
+ARB* insertARBNode(ARB* ROOT, void* toInsert, FUNCTDATA* funList){
     if(ROOT!=NULL){
             //NAVIGAZIONE NELL'ALBERO
         if(funList->fcomp(ROOT->element, toInsert)>0){
@@ -158,7 +158,7 @@ ARB* insertARBNode(ARB* ROOT, void* toInsert, FUNCT* funList){
 ***/
 //STAMPA CON NAVIGAZIONE IN IN-ORDER
 
-void printARB(ARB* ROOT, FUNCT* funList){
+void printARB(ARB* ROOT, FUNCTDATA* funList){
     if(ROOT!=NULL){
         printf("\n");
         funList->fpri(ROOT->element);
@@ -176,7 +176,7 @@ void printARB(ARB* ROOT, FUNCT* funList){
 //OVVERO CANCELLA PRIMA TUTTI I FIGLI E POI IL NODO DI RIFERIMENTO
 //DOVENDO CANCELLARE TUTTO ELIMINA PRIMA LE FOGLIE E RICORSIVAMENTE
 //I NODI PADRE FINO A GIUNGERE ALLA RADICE
-ARB* deleteAllKey(ARB* ROOT, FUNCT* funList){
+ARB* deleteAllKey(ARB* ROOT, FUNCTDATA* funList){
     if(ROOT!=NULL){
         ROOT->sx=deleteAllKey(ROOT->sx, funList);
         ROOT->dx=deleteAllKey(ROOT->dx, funList);
@@ -192,7 +192,7 @@ ARB* deleteAllKey(ARB* ROOT, FUNCT* funList){
 //PREVEDE UNA NAVIGAZIONE NELL'ALBERO PER LA RICERCA DELLA STRINGA
 //NEL CASO LA STRINGA VENGA TROVATA VERRA' CANCELLATA
 
-ARB* searchStringAndDelete(ARB* ROOT, void* toDelete, FUNCT* funList){
+ARB* searchStringAndDelete(ARB* ROOT, void* toDelete, FUNCTDATA* funList){
     int r;
     if(ROOT!=NULL){
         r=funList->fcomp(ROOT->element, toDelete);
@@ -225,7 +225,7 @@ la seguente proprietà:
 //INOLTRE PER EVITARE DI SCORRERE INUTILMENTE TUTTO L'ALBERO CONTROLLA SE E' IL CASO DI SCENDERE
 //NEI SOTTOALBERI CONTROLLANDO SE LE STRINGHE DELLE RADICI DEI SOTTOALBERI SI TROVANO ALL'INTERNO DEL RANGE
 
-ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCT* funList){
+ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCTDATA* funList){
     if(funList->fcomp(strMin, strMax)>0){
         return ROOT;
     }
@@ -259,7 +259,7 @@ ARB* searchConditionAndDeleteARB(ARB* ROOT, char* strMin, char* strMax, int odd,
 ***/
 //GENERA CASUALMENTE UNA STRINGA E POI LA INSERISCE NEL SOTTOALBERO
 //POI DECREMENTA IL CONTATORE DEI NODI
-ARB* casualARB(ARB* ROOT, int numNodes, FUNCT* funList){
+ARB* casualARB(ARB* ROOT, int numNodes, FUNCTDATA* funList){
     srand(time(NULL));
     void* toIns;
     while(numNodes>0){
@@ -277,7 +277,7 @@ ARB* casualARB(ARB* ROOT, int numNodes, FUNCT* funList){
 //MAN MANO CHE INCONTRA QUELLE DELL'ALBERO ORIGINALE
 //COSI' FACENDO INSERISCE NEL DUPLICATO LE CHIAVI NELLO STESSO ORDINE IN CUI SONO
 //STATE INSERITE QUELLE DELL'ALBERO INIZIALE
-ARB* duplicateARB(ARB* original, FUNCT* funList){
+ARB* duplicateARB(ARB* original, FUNCTDATA* funList){
     ARB* copy=NULL;
     if(original!=NULL){
         copy=(ARB*)malloc(sizeof(ARB));
@@ -297,7 +297,7 @@ ARB* duplicateARB(ARB* original, FUNCT* funList){
 //NON ESISTE, ALLORA RESTITUISCE 0, ALTRIMENTI PRENDE IN CONSIDERAZIONE LE CHIAVI.
 //E COSI0 VIA FINCHE' NON INCONTRA SOTTOALBERI DI FORMA DIVERSA O CHIAVI NON IDENTICHE.
 //SE NON INCONTRA NESSUNA DELLA DUE, ALLORA L'ALGORITMO FINISCE E RESTITUISCE 1
-int controlSameARB(ARB* one, ARB* two, FUNCT* funList){
+int controlSameARB(ARB* one, ARB* two, FUNCTDATA* funList){
     if(one!=NULL && two!=NULL){
         if(funList->fcomp(one->element, two->element)==0){
             if(controlSameARB(one->sx, two->sx, funList)==1 && controlSameARB(one->dx, two->dx, funList)==1){
@@ -319,7 +319,7 @@ int controlSameARB(ARB* one, ARB* two, FUNCT* funList){
 
 
 //PASSANDO LA GRANDEZZA DELL'ARRAY, L'ALGORITMO RIEMPIE A PARTIRE DALL'ULTIMO POSTO E DECREMENTA IL CONTATORE
-void** vectorizeFunction(ARB* ROOT, void** vec, int* k, FUNCT* funList){
+void** vectorizeFunction(ARB* ROOT, void** vec, int* k, FUNCTDATA* funList){
     if(ROOT!=NULL){
             //RICORRE FINO A RAGGIUNGERE UN NODO NULLO
 		vec=vectorizeFunction(ROOT->dx, vec, k, funList);
@@ -335,7 +335,7 @@ void** vectorizeFunction(ARB* ROOT, void** vec, int* k, FUNCT* funList){
 	return vec;
 }
 //SI ALLOCA PRIMA UN ARRAY DELLA STESSA DIMENSIONE DELL'ALBERO, POI SI PARTE CON IL SUO RIEMPIMENTO ORDINATO
-void** vectorizeARB(ARB* toVectorize, FUNCT* funList){
+void** vectorizeARB(ARB* toVectorize, FUNCTDATA* funList){
     int size=countARBNode(toVectorize);
     void** result;
     result=(void**)malloc(sizeof(void*)*size);
@@ -354,7 +354,7 @@ al massimo di 1. Si sfrutti opportunamente il punto 9 per realizzare la funziona
 //POI SI PASSANO GLI ESTREMI DEI SOTTOARRAY DELIMITATI DALL'ELEMENTO MEDIANO
 //SI PROCEDE IN QUESTO MODO FINCHE' NON SI INCROCIANO GLI ESTREMI PASSATI
 //A QUEL PUNTO L'ALGORITMO TERMINA
-ARB* balanceFunction(void** source, int i, int j, ARB* res, FUNCT* funList){
+ARB* balanceFunction(void** source, int i, int j, ARB* res, FUNCTDATA* funList){
     int k;
     if(i<=j){
         k=(i+j)/2;
@@ -367,7 +367,7 @@ ARB* balanceFunction(void** source, int i, int j, ARB* res, FUNCT* funList){
 
 
 //USIAMO IL VETTORE CREATO AL PUNTO 9.
-ARB* balanceARB(ARB* toBalance, FUNCT* funList){
+ARB* balanceARB(ARB* toBalance, FUNCTDATA* funList){
     void** temp;
     ARB* result=NULL;
     int i;

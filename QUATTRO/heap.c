@@ -1,148 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "heap.h"
+#include "data.h"
+/***********************************/
 
-#define ARRAY_TYPE 0
-#define TREE_TYPE 1
-
-/**********DEALLOCAZIONE INTERO HEAP************/
-typedef struct heapNode{
-    void* data;
-    int priority;
-}heapNode;
-
-typedef struct heapABNode{
-    struct heapABNode* dad;
-    struct heapABNode* sx;
-    struct heapABNode* dx;
-    heapNode* element;
-}heapABNode;
-
-typedef struct ABHEAP{
-    heapABNode* HEAPROOT;
-}ABHEAP;
-
-typedef struct ARRAYHEAP{
-    heapNode* HEAP;
-    int HEAPDIM;
-}ARRAYHEAP;
-
-typedef struct heap{
-    ARRAYHEAP* heapArray;
-    ABHEAP* heapTree;
-    int HEAPSIZE;
-    struct FUNCT* function;
-    int heaptype;
-}heap;
-
-typedef heap*(*FUNHEAPINS)(heap*, void*, int);
-typedef heap*(*FUNHEAPDEL)(heap*, int);
-typedef heapNode*(*FUNHEAPMAX)(heap*);
-typedef heapNode*(*FUNHEAPEXTRMAX)(heap*);
-typedef void(*FUNHEAPCHANGEPRI)(heap*, int, int);
-typedef void(*FUNHEAPIFY)(heap*, int);
+/*************************************/
 
 
-typedef struct FUNCT{
-    FUNHEAPIFY heapify;
-    FUNHEAPMAX maxHeap;
-    FUNHEAPEXTRMAX extractMaxHeap;
-    FUNHEAPCHANGEPRI decreasePriorityHeap;
-    FUNHEAPCHANGEPRI increasePriorityHeap;
-    FUNHEAPDEL delKeyHeap;
-    FUNHEAPINS insKeyHeap;
-}FUNCT;
 
-/***********************************************/
-
-heap* makeArrayHeap(int n, heapNode*);
-void heapifyArrayHeap(heap* H, int i);
-heapNode* maxArrayHeap(heap* extr);
-heapNode* extractMaxArrayHeap(heap* extr);
-void decreasePriorityArrayHeap(heap* dec, int nEl, int newP);
-void increasePriorityArrayHeap(heap* dec, int nEl, int newP);
-heap* deleteKeyArrayHeap(heap* A,int i);
-heap* insertKeyArrayHeap(heap* A, void*, int key);
-
-/***********************************************/
-
-heapABNode* makeHeapTreeNode(heapABNode* root, heapABNode* dad, void* toIns, int pri);
-heapABNode* scrollTreeHeap(heap* HEAP, int n);
-
-heap* makeTreeHeap(int n, heapNode*);
-void heapifyTreeHeap(heap* root, int);
-heapNode* maxTreeHeap(heap* HEAP);
-heapNode* extractMaxTreeHeap(heap* HEAP);
-void decreasePriorityTreeHeap(heap* HEAP, int pos, int nPri);
-void increasePriorityTreeHeap(heap* HEAP, int pos, int nPri);
-heap* deleteKeyTreeHeap(heap* HEAP, int i);
-heap* insertKeyTreeHeap(heap* HEAP, void* elem, int key);
-/**************************************************/
-
-heap* makeHeap(int TYPE, int n, heapNode*);
-void heapify(heap* toHeapify, int where);
-heapNode* maxHeap(heap* see);
-heapNode* extractMaxHeap(heap* toExtract);
-void increasePriorityHeap(heap* HEAP, int toIncrease, int newPriority);
-void decreasePriorityHeap(heap* HEAP, int toDecrease, int newPriority);
-heap* deleteKeyHeap(heap* HEAP, int toDelete);
-heap* insertKeyHeap(heap* HEAP, void* toInsert, int priority);
-
-
-void printARB(heapABNode* ROOT){
-    if(ROOT!=NULL){
-        printf("\n%d", ROOT->element->priority);
-        printf("\n%d sx: ");
-        printARB(ROOT->sx);//, funList);
-        printf("\n%d dx: ");
-        printARB(ROOT->dx);//, funList);
-    }
-}
-
-int main(){
-    heap* k;
-    heapNode array[7];
-int i=0;
-    for(i=0; i<7; i++){
-        scanf("%d", &(array[i].priority));
-        array[i].data=NULL;
-    }
-
-printf("\n");
-    k=makeHeap(ARRAY_TYPE, 7, array);
-    for(i=0; i<k->HEAPSIZE; i++){
-        printf("%d\n", k->heapArray->HEAP[i].priority);
-    }
-    k=insertKeyHeap(k, NULL, 89);
-    k=insertKeyHeap(k, NULL, 55);
-
-printf("\n");
-//    k=makeHeap(ARRAY_TYPE, 5, array);
-    for(i=0; i<k->HEAPSIZE; i++){
-        printf("%d\n", k->heapArray->HEAP[i].priority);
-    }
-    //printARB(k->heapTree->HEAPROOT);
-  /*  k=insertKeyTreeHeap(k, NULL, 89);
-    printf("\n\n\n\n");
-/*/
-   // printARB(k->heapTree->HEAPROOT);
-/*
-heapNode array[5];
-int i=0;
-    for(i=0; i<5; i++){
-        scanf("%d", &(array[i].priority));
-        array[i].data=NULL;
-    }
-
-k=makeArrayHeap(5, array);
-printf("esc");
-/*heapNode* p;//=maxArrayHeap(k);
-printf("\n%d\n", p->priority);*/
-    return 0;
-}
-
-FUNCT* initFuncHeap(int typeH){
-    FUNCT* ret=(FUNCT*)malloc(sizeof(FUNCT));
+FUNCTHEAP* initFuncHeap(heapType typeH){
+    FUNCTHEAP* ret=(FUNCTHEAP*)malloc(sizeof(FUNCTHEAP));
     if(typeH==ARRAY_TYPE){
         ret->heapify=&heapifyArrayHeap;
         ret->maxHeap=&maxArrayHeap;
@@ -151,6 +19,8 @@ FUNCT* initFuncHeap(int typeH){
         ret->decreasePriorityHeap=&increasePriorityArrayHeap;
         ret->insKeyHeap=&insertKeyArrayHeap;
         ret->delKeyHeap=&deleteKeyArrayHeap;
+        ret->freeOnlyHeap=&freeArrayHeap;
+        ret->freeAll=&freeArrayHeapWithElements;
     }else if(typeH==TREE_TYPE){
         ret->decreasePriorityHeap=&decreasePriorityTreeHeap;
         ret->delKeyHeap=&deleteKeyTreeHeap;
@@ -159,17 +29,24 @@ FUNCT* initFuncHeap(int typeH){
         ret->increasePriorityHeap=&increasePriorityTreeHeap;
         ret->insKeyHeap=&insertKeyTreeHeap;
         ret->maxHeap=&maxTreeHeap;
+        ret->freeOnlyHeap=&freeTreeHeap;
+        ret->freeAll=&freeTreeHeapWithElements;
     }
     return ret;
 }
 
+FUNCTHEAP* deleteFuncHeap(FUNCTHEAP* toDel){
+    free(toDel);
+    return NULL;
+}
 
-heap* makeHeap(int TYPE, int n, heapNode* array){
+
+heap* makeHeap(heapType TYPE, int n, heapNode* array, FUNCPY fcopy){
     heap* toMake=NULL;
     if(TYPE==ARRAY_TYPE){
-        toMake=makeArrayHeap(n, array);
+        toMake=makeArrayHeap(n, array, fcopy);
     }else if(TYPE==TREE_TYPE){
-        toMake=makeTreeHeap(n, array);
+        toMake=makeTreeHeap(n, array, fcopy);
     }
     return toMake;
 }
@@ -177,10 +54,10 @@ heap* makeHeap(int TYPE, int n, heapNode* array){
 void heapify(heap* toHeapify, int where){
     if(toHeapify!=NULL){
         if(toHeapify->function!=NULL){
-            if(toHeapify->heaptype==ARRAY_TYPE){
+            if(toHeapify->type==ARRAY_TYPE){
                 toHeapify->function->heapify(toHeapify, where-1);
-            }else{
-                toHeapify->function->heapify(toHeapify, where-1);
+            }else if(toHeapify->type==TREE_TYPE){
+                toHeapify->function->heapify(toHeapify, where);
             }
         }
     }
@@ -213,6 +90,7 @@ void increasePriorityHeap(heap* HEAP, int toIncrease, int newPriority){
         }
     }
 }
+
 void decreasePriorityHeap(heap* HEAP, int toDecrease, int newPriority){
     if(HEAP!=NULL){
         if(HEAP->function!=NULL){
@@ -230,18 +108,38 @@ heap* deleteKeyHeap(heap* HEAP, int toDelete){
     return HEAP;
 }
 
-heap* insertKeyHeap(heap* HEAP, void* toInsert, int priority){
+heap* insertKeyHeap(heap* HEAP, void* toInsert, int priority, FUNCPY fcopy){
     if(HEAP!=NULL){
         if(HEAP->function!=NULL){
-            HEAP=HEAP->function->insKeyHeap(HEAP, toInsert, priority);
+            HEAP=HEAP->function->insKeyHeap(HEAP, toInsert, priority, fcopy);
         }
     }
     return HEAP;
 }
 
-heap* makeArrayHeap(int n, heapNode array[]){
+heap* freeHeap(heap* toFree){
+    if(toFree!=NULL){
+        if(toFree->function!=NULL){
+            toFree=toFree->function->freeOnlyHeap(toFree);
+        }
+    }
+    return toFree;
+}
+
+heap* freeHeapWithElements(heap* toFree, FUNDEL FDEL){
+    if(toFree!=NULL){
+        if(toFree->function!=NULL){
+            toFree=toFree->function->freeAll(toFree, FDEL);
+        }
+    }
+    return toFree;
+}
+
+/*****/
+
+heap* makeArrayHeap(int n, heapNode array[], FUNCPY fcopy){
     heap* ret;
-    int i, p, el=1;
+    int i, el=1;
     i=n;
     while(i>0){
         i=i/2;
@@ -254,10 +152,10 @@ heap* makeArrayHeap(int n, heapNode array[]){
     ret->heapArray->HEAPDIM=el;
     ret->heapArray->HEAP=(heapNode*)malloc(sizeof(heapNode)*el);
     ret->function=initFuncHeap(ARRAY_TYPE);
-    ret->heaptype=ARRAY_TYPE;
+    ret->type=ARRAY_TYPE;
     for(i=0; i<n; i++){
         ret->heapArray->HEAP[i].priority=array[i].priority;
-        ret->heapArray->HEAP[i].data=array[i].data;
+        ret->heapArray->HEAP[i].data=fcopy(ret->heapArray->HEAP[i].data, array[i].data);
     }
     for(i=(n/2); i>=0; i--){
         heapifyArrayHeap(ret,i);
@@ -321,8 +219,6 @@ heapNode* extractMaxArrayHeap(heap* extr){
 }
 
 void decreasePriorityArrayHeap(heap* dec, int nEl, int newP){
-    heapNode temp;
-    int i=nEl;
     if(dec->heapArray->HEAP[nEl].priority>newP){
         dec->heapArray->HEAP[nEl].priority=newP;
         heapifyArrayHeap(dec, nEl);
@@ -344,25 +240,19 @@ void increasePriorityArrayHeap(heap* dec, int nEl, int newP){
     }
 }
 
-heap* insertKeyArrayHeap(heap* A, void* ele, int key){
-    heapNode*t=NULL;
-    int i;
+heap* insertKeyArrayHeap(heap* A, void* ele, int key, FUNCPY fcopy){
     A->HEAPSIZE++;
     if(A->HEAPSIZE>A->heapArray->HEAPDIM){
         A->heapArray->HEAPDIM=A->heapArray->HEAPDIM*2;
-        //t=(heapNode*)realloc(sizeof(heapNode)*A->heapArray->HEAPDIM);
         A->heapArray->HEAP=(heapNode*)realloc(A->heapArray->HEAP, sizeof(heapNode)*A->heapArray->HEAPDIM);
-        /*for(i=0; i<A->HEAPSIZE; i++){
-            t[i]=A->heapArray->HEAP[i];
-        }
-        A->heapArray->HEAP=t;*/
     }
-    A->heapArray->HEAP[A->HEAPSIZE-1].data=ele;
+    A->heapArray->HEAP[A->HEAPSIZE-1].data=fcopy(A->heapArray->HEAP[A->HEAPSIZE-1].data, ele);
     A->heapArray->HEAP[A->HEAPSIZE-1].priority=-1;
     increasePriorityArrayHeap(A, A->HEAPSIZE-1, key);
     return A;
 }
 
+/**cancella il nodo, ma non dealloca l'elemento alocato nell'HEAP**/
 heap* deleteKeyArrayHeap(heap* A,int i){
     heapNode temp;
     if(A->HEAPSIZE>0 && i<=A->HEAPSIZE){
@@ -379,7 +269,34 @@ heap* deleteKeyArrayHeap(heap* A,int i){
     return A;
 }
 
+heap* freeArrayHeap(heap* toFree){
+    int i=0;
+    if(toFree!=NULL){
+        for(i=0; i<toFree->HEAPSIZE; i++){
+            free((toFree->heapArray->HEAP)+i);
+        }
+        free(toFree->heapArray);
+        deleteFuncHeap(toFree->function);
+        free(toFree);
+        toFree=NULL;
+    }
+    return toFree;
+}
 
+heap* freeArrayHeapWithElements(heap* toFree, FUNDEL FDEL){
+    int i=0;
+    if(toFree!=NULL){
+        for(i=0; i<toFree->HEAPSIZE; i++){
+            FDEL(toFree->heapArray->HEAP[i].data);
+            free((toFree->heapArray->HEAP)+i);
+        }
+        free(toFree->heapArray);
+        free(toFree->function);
+        free(toFree);
+        toFree=NULL;
+    }
+    return toFree;
+}
 
 
 
@@ -396,20 +313,19 @@ heap* deleteKeyArrayHeap(heap* A,int i){
 
 
 
-heap* makeTreeHeap(int n, heapNode* array){
+heap* makeTreeHeap(int n, heapNode* array, FUNCPY fcopy){
     heap* ret=(heap*)malloc(sizeof(heap));
     ret->HEAPSIZE=n;
     ret->heapTree=(ABHEAP*)malloc(sizeof(ABHEAP));
     ret->heapArray=NULL;
     ret->heapTree->HEAPROOT=NULL;
-    ret->heaptype=TREE_TYPE;
+    ret->type=TREE_TYPE;
     ret->function=initFuncHeap(TREE_TYPE);
     heapABNode* scroll=ret->heapTree->HEAPROOT;
     heapABNode* dad=NULL;
-    int i=0, k, curr, dir;
+    int j, k, curr;
     char pointer[33];
     curr=1;
-    int pri;
     while(n>=curr){
         dad=NULL;
         scroll=ret->heapTree->HEAPROOT;
@@ -429,26 +345,26 @@ heap* makeTreeHeap(int n, heapNode* array){
             }
             if(pointer[k-1]=='1'){
                 /****************array[curr].data vorrei fare la copia più che dare l'indirizzo****/
-                dad->dx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority);
+                dad->dx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority, fcopy);
             }else if(pointer[k-1]=='0'){
-                dad->sx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority);
+                dad->sx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority, fcopy);
             }
         }else{
-            ret->heapTree->HEAPROOT=makeHeapTreeNode(ret->heapTree->HEAPROOT, dad, array[curr].data, array[curr].priority);
+            ret->heapTree->HEAPROOT=makeHeapTreeNode(ret->heapTree->HEAPROOT, dad, array[curr].data, array[curr].priority, fcopy);
         }
         curr++;
     }
-    int j=(ret->HEAPSIZE)/2;
-    for(j; j>=1; j--){
+
+    for(j=(ret->HEAPSIZE)/2; j>0; j--){
         heapifyTreeHeap(ret, j);
     }
     return ret;
 }
 
-heapABNode* makeHeapTreeNode(heapABNode* root, heapABNode* dad, void* toIns, int pri){
+heapABNode* makeHeapTreeNode(heapABNode* root, heapABNode* dad, void* toIns, int pri, FUNCPY fcopy){
     root=(heapABNode*)malloc(sizeof(heapABNode));
     root->element=(heapNode*)malloc(sizeof(heapNode));
-    root->element->data=toIns;
+    root->element->data=fcopy(root->element->data, toIns);
     root->element->priority=pri;
     root->dx=NULL;
     root->sx=NULL;
@@ -487,7 +403,7 @@ void heapifyTreeHeap(heap* toHeap, int j){
 
 
 heapABNode* scrollTreeHeap(heap* HEAP, int n){
-    int k, i;
+    int k;
     heapABNode* scroll=NULL;
     char pointer[33];
     if(n<=HEAP->HEAPSIZE && n>0){
@@ -519,8 +435,8 @@ heapNode* extractMaxTreeHeap(heap* HEAP){
     heapABNode* max=NULL;
     heapNode* temp;
     heapABNode* swi;
-    int n;
     if(HEAP!=NULL){
+        swi=HEAP->heapTree->HEAPROOT;
         max=scrollTreeHeap(HEAP, HEAP->HEAPSIZE);
         if(swi!=NULL){
             temp=max->element;
@@ -572,7 +488,6 @@ void increasePriorityTreeHeap(heap* HEAP, int pos, int nPri){
 heap* deleteKeyTreeHeap(heap* HEAP, int i){
     heapABNode* toDel=NULL;
     heapABNode* toReplace=NULL;
-    heapABNode* newLast=NULL;
     heapNode* temp=NULL;
     i++;
     if(HEAP!=NULL && i>0){
@@ -590,7 +505,6 @@ heap* deleteKeyTreeHeap(heap* HEAP, int i){
                 }
                 HEAP->HEAPSIZE=HEAP->HEAPSIZE-1;
                 heapifyTreeHeap(HEAP, i);
-                free(toReplace->element);
                 free(toReplace);
             }
         }
@@ -599,21 +513,66 @@ heap* deleteKeyTreeHeap(heap* HEAP, int i){
 }
 
 
-heap* insertKeyTreeHeap(heap* HEAP, void* elem, int key){
+heap* insertKeyTreeHeap(heap* HEAP, void* elem, int key, FUNCPY fcopy){
     int n;
     heapABNode* dad=NULL;
     if(HEAP->HEAPSIZE==0){
-        HEAP->heapTree->HEAPROOT=makeHeapTreeNode(HEAP->heapTree->HEAPROOT, NULL, elem, -1);
+        HEAP->heapTree->HEAPROOT=makeHeapTreeNode(HEAP->heapTree->HEAPROOT, NULL, elem, -1, fcopy);
     }else{
         n=((HEAP->HEAPSIZE)+1)/2;
         dad=scrollTreeHeap(HEAP, n);
         if(dad->sx==NULL){
-            dad->sx=makeHeapTreeNode(dad->sx, dad, elem, -1);
+            dad->sx=makeHeapTreeNode(dad->sx, dad, elem, -1, fcopy);
         }else if(dad->dx==NULL){
-            dad->dx=makeHeapTreeNode(dad->dx, dad, elem, -1);
+            dad->dx=makeHeapTreeNode(dad->dx, dad, elem, -1, fcopy);
         }
     }
     HEAP->HEAPSIZE++;
     increasePriorityTreeHeap(HEAP, HEAP->HEAPSIZE, key);
     return HEAP;
 }
+
+heapABNode* freeTWE(heapABNode* nodeToFree, FUNDEL FDEL){
+    if(nodeToFree!=NULL){
+        nodeToFree->dx=freeTWE(nodeToFree->dx, FDEL);
+        nodeToFree->sx=freeTWE(nodeToFree->sx, FDEL);
+        FDEL(nodeToFree->element->data);
+        free(nodeToFree->element);
+        free(nodeToFree);
+        nodeToFree=NULL;
+    }
+    return nodeToFree;
+}
+
+heap* freeTreeHeapWithElements(heap* toFree, FUNDEL FDEL){
+    if(toFree!=NULL){
+        freeTWE(toFree->heapTree->HEAPROOT, FDEL);
+        free(toFree->heapTree);
+        deleteFuncHeap(toFree->function);
+        free(toFree);
+        toFree=NULL;
+    }
+    return toFree;
+}
+
+heapABNode* freeT(heapABNode* nodeToFree){
+    if(nodeToFree!=NULL){
+        freeT(nodeToFree->dx);
+        freeT(nodeToFree->sx);
+        free(nodeToFree);
+        nodeToFree=NULL;
+    }
+    return nodeToFree;
+}
+
+heap* freeTreeHeap(heap* toFree){
+    if(toFree!=NULL){
+        freeT(toFree->heapTree->HEAPROOT);
+        free(toFree->heapTree);
+        deleteFuncHeap(toFree->function);
+        free(toFree);
+        toFree=NULL;
+    }
+    return toFree;
+}
+
