@@ -2,10 +2,17 @@
 #include<stdlib.h>
 #include<string.h>
 
+
 typedef struct heapNode{
     void* data;
     int priority;
 }heapNode;
+
+typedef struct heapArray{
+    heapNode* array;
+    struct FUNCT* function;
+    int HEAPDIM;
+}heapArray;
 
 typedef struct heapABNode{
     struct heapABNode* dad;
@@ -14,57 +21,138 @@ typedef struct heapABNode{
     heapNode* element;
 }heapABNode;
 
+typedef struct heapABTree{
+    heapABNode* tree;
+    struct FUNCT* function;
+}heapABTree;
+
 typedef struct heapType{
-    heapNode* HEAP;
-    heapABNode* HEAPROOT;
-    int HEAPSIZE;
-    int HEAPDIM;
+    heapArray* HEAPARRAY;
+    heapABTree* HEAPROOT;
     int heaptype;
+}heapType;
+
+typedef struct heap{
+    heapType* HEAP;
+    int HEAPSIZE;
 }heap;
 
+typedef heap*(*FUNHEAPINS)(heap*, int);
+typedef heap*(*FUNHEAPDEL)(heap*, int);
+typedef heapNode*(*FUNHEAPMAX)(heap*);
+typedef heapNode*(*FUNHEAPEXTRMAX)(heap*);
+typedef void(*FUNHEAPCHANGEPRI)(heap*, int, int);
+typedef void(*FUNHEAPIFY)(heap*, int);
 
 
+typedef struct FUNCT{
+    FUNHEAPINS insHeap;
+    FUNHEAPDEL delHeap;
+    FUNHEAPMAX maxHeap;
+    FUNHEAPEXTRMAX extractMaxHeap;
+    FUNHEAPCHANGEPRI decreasePriorityHeap;
+    FUNHEAPCHANGEPRI increasePriorityABHeap;
+    FUNHEAPIFY heapify;
+}FUNCT;
+
+
+heap* deleteKeyArray(heap*, int);
+heap* insertKey(heap*, int);
+heap* makeHeapArray(int);
+heapNode* maxHeap(heap*);
+void Heapify(heap*, int);
+heapNode* extractMaxHeap(heap*);
+void decreasePriorityHeap(heap*, int, int);
+void increasePriorityHeap(heap*, int, int);
 heapABNode* makeHeapABNode(heapABNode*, heapABNode*, void*, int);
+int right(int);
+int left(int);
+int dad(int);
+
+
 heap* makeHeapTree(int );
 void heapifyAB(heapABNode*);
-void  heapifyABHeap(heapABNode*);
+void heapifyABHeap(heapABNode*);
 
 
 /*****/
 
-heapABNode* maxABHeap(heap* HEAP);
-heapABNode* extractMaxABHeap(heap* HEAP);
+heapNode* maxABHeap(heap* HEAP);
+heapNode* extractMaxABHeap(heap* HEAP);
 heapABNode* scrollAB(heap* HEAP, int n);
 void decreasePriorityABHeap(heap* HEAP, int pos, int nPri);
 void increasePriorityABHeap(heap* HEAP, int pos, int nPri);
 heap* deleteKeyABHeap(heap* HEAP, int i);
 heap* insertKeyABHeap(heap* HEAP, void* elem, int key);
-/*****/
-
-void printARB(heapABNode* ROOT){//, FUNCT* funList){
-    if(ROOT!=NULL){
-        printf("\n%d", ROOT->element->priority);
-        printf("\n%d sx: ");
-        printARB(ROOT->sx);//, funList);
-        printf("\n%d dx: ");
-        printARB(ROOT->dx);//, funList);
-    }
-}
 
 
-int main(){
+int main(){/*
     heap* p;
-    p=makeHeapTree(8);
-    printARB(p->HEAPROOT);
-    printf("\nhere\n\n\n\n\n");
-
-    //heapABNode*s=extractMaxABHeap(p);
-    insertKeyABHeap(p, NULL, 10);
-    printARB(p->HEAPROOT);/*
-    heapABNode* s=scrollAB(p, 3);*/
+    p=makeHeapArray(7);
+    int i=0;
+    printf("\n");
+    for(i=0; i<p->HEAPSIZE; i++){
+        printf("%d: %d\n", i, p->HEAP[i].priority);
+    }
+    getchar();
+    printf("\nins\n");
+    scanf("%d", &i);
+    p=deleteKeyArray(p, i);
+    for(i=0; i<p->HEAPSIZE; i++){
+        printf("%d: %d\n", i, p->HEAP[i].priority);
+    }*/
     return 0;
 }
 
+
+/*
+
+/*
+heap* makeHeapTree(int n){
+    heap* HEAP=(heap*)malloc(sizeof(heap));
+    HEAP->HEAPDIM=n;
+    HEAP->HEAPSIZE=0;
+    HEAP->HEAP=NULL;
+    HEAP->HEAPROOT=NULL;
+    heapABNode* scroll=HEAP->HEAPROOT;
+    int i=0, k, curr, dir;
+    char pointer[33];
+    curr=1;
+    int pri;
+    while(n>=curr){
+        scanf("%d", &pri);
+        scroll=HEAP->HEAPROOT;
+        itoa(curr, pointer, 2);
+        int i=strlen(pointer);
+        k=1;
+        if(i>1){
+            while(i>k){
+                printf("%d %c: ",k, pointer[k]);
+                if(pointer[k]=='1'){
+                    scroll=scroll->dx;
+                }else if(pointer[k]=='0'){
+                    scroll=scroll->sx;
+                }
+                k++;
+            }
+        }else{
+            HEAP->HEAPROOT=makeHeapABNode(HEAP->HEAPROOT,NULL, NULL, pri);
+        }
+        curr++;
+    }
+
+}
+*//*
+heapABNode* makeHeapABNode(heapABNode* root, heapABNode* dad, void* toIns, int pri){
+    root=(heapABNode*)malloc(sizeof(heapABNode));
+    root->element=(heapNode*)malloc(sizeof(heapNode));
+    root->element->data=toIns;
+    root->element->priority=pri;
+    root->dx=NULL;
+    root->sx=NULL;
+    root->dad=dad;
+    return root;
+}
 
 heap* makeHeapTree(int n){
     heap* HEAP=(heap*)malloc(sizeof(heap));
@@ -116,17 +204,6 @@ heap* makeHeapTree(int n){
     return HEAP;
 }
 
-heapABNode* makeHeapABNode(heapABNode* root, heapABNode* dad, void* toIns, int pri){
-    root=(heapABNode*)malloc(sizeof(heapABNode));
-    root->element=(heapNode*)malloc(sizeof(heapNode));
-    root->element->data=toIns;
-    root->element->priority=pri;
-    root->dx=NULL;
-    root->sx=NULL;
-    root->dad=dad;
-    return root;
-}
-
 void heapifyAB(heapABNode* root){
     heapABNode* left=NULL;
     heapABNode* right=NULL;
@@ -150,13 +227,13 @@ void heapifyAB(heapABNode* root){
     }
 }
 
-heapABNode* maxABHeap(heap* HEAP){
+heapNode* maxABHeap(heap* HEAP){
     if(HEAP!=NULL){
-        return HEAP->HEAPROOT;
+        return HEAP->HEAPROOT->element;
     }else return NULL;
 }
 
-heapABNode* extractMaxABHeap(heap* HEAP){
+heapNode* extractMaxABHeap(heap* HEAP){
     heapABNode* max=NULL;
     heapNode* temp;
     heapABNode* swi;
@@ -171,20 +248,17 @@ heapABNode* extractMaxABHeap(heap* HEAP){
 
             HEAP->HEAPSIZE=HEAP->HEAPSIZE-1;
 
-            /******/
             if(max==max->dad->dx){
                 max->dad->dx=NULL;
             }else{
                 max->dad->sx=NULL;
             }
 
-            /******/
-
             heapifyAB(HEAP->HEAPROOT);
         }
 
     }
-    return max;
+    return max->element;
 }
 
 
@@ -304,3 +378,4 @@ heap* insertKeyABHeap(heap* HEAP, void* elem, int key){
     }
     return HEAP;
 }
+*/

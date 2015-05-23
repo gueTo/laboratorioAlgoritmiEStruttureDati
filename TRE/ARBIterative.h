@@ -65,3 +65,7 @@ int countARBNodeIterative(ARB*);
 void** vectorizeARBIterative(ARB*, FUNCT*);
 
 ARB* balanceARBIterative(ARB*, FUNCT*);
+
+FUNCT *initFUNCT();
+void FUNCTtype(FUNCT* , int);
+FUNCT* deleteFUNCT(FUNCT*);

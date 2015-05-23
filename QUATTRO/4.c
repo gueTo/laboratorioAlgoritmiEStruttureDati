@@ -32,24 +32,26 @@ void Heapify(heap*, int);
 heapNode* extractMaxHeap(heap*);
 void decreasePriorityHeap(heap*, int, int);
 void increasePriorityHeap(heap*, int, int);
+heapABNode* makeHeapABNode(heapABNode*, heapABNode*, void*, int);
 int right(int);
 int left(int);
 int dad(int);
 
+
 int main(){
     heap* p;
-    p=makeHeapArray(7);
+    p=makeHeapArray(5);
     int i=0;
     printf("\n");
     for(i=0; i<p->HEAPSIZE; i++){
         printf("%d: %d\n", i, p->HEAP[i].priority);
     }
     getchar();
-    printf("\nins\n");
-    scanf("%d", &i);
-    p=deleteKeyArray(p, i);
+    /*printf("\nins\n");
+    scanf("%d", &i);*/
+    p=deleteKeyArray(p, 0);
     for(i=0; i<p->HEAPSIZE; i++){
-        printf("%d: %d\n", i, p->HEAP[i].priority);
+        printf("\n%d: %d", i, p->HEAP[i].priority);
     }
     return 0;
 }
@@ -95,15 +97,15 @@ void Heapify(heap* H, int i){
     }
 }
 
-int rightArray(int i){
+int right(int i){
     return (2*i);
 }
 
-int leftArray(int i){
+int left(int i){
     return (2*(i+1))-1;
 }
 
-int dadArray(int i){
+int dad(int i){
     return ((i+1)/2)-1;
 }
 
@@ -170,7 +172,7 @@ heap* insertKeyArray(heap* A, int key){
 
 heap* deleteKeyArray(heap* A,int i){
     heapNode temp;
-    if(A->HEAPSIZE>0){
+    if(A->HEAPSIZE>0 && i<=A->HEAPSIZE){
         temp.data=A->HEAP[i].data;
         A->HEAP[A->HEAPSIZE-1].data=A->HEAP[i].data;
         A->HEAP[i].data=temp.data;
