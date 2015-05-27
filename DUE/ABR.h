@@ -14,7 +14,7 @@ typedef int(* FUNCOM)(void*, void*);
 #endif // _FUNCOM_
 
 #ifndef _FUNPRINT_
-#define_FUNPRINT_
+#define _FUNPRINT_
 
 typedef void(* FUNPRINT)(void*);
 
@@ -49,6 +49,9 @@ typedef int(*FUNODD)(void*, int);
 #endif // _FUNOOD_
 
 
+#ifndef _FUNCTDATA_
+#define _FUNCTDATA_
+
 typedef struct func{
 	FUNINS fins;
 	FUNCPY fcopy;
@@ -60,6 +63,14 @@ typedef struct func{
    	int ty;
 }FUNCTDATA;
 
+FUNCTDATA *initFUNCTDATA();
+void FUNCTDATAtype(FUNCTDATA* , int);
+FUNCTDATA* deleteFUNCTDATA(FUNCTDATA*);
+
+#endif // _FUNCTDATA_
+
+#ifndef _ARB_STRUCT_
+#define _ARB_STRUCT_
 typedef struct ARBType{
     void* element;
     struct ARBType* sx;
@@ -67,13 +78,12 @@ typedef struct ARBType{
 }ARB;
 
 
-FUNCTDATA *initFUNCTDATA();
-void FUNCTDATAtype(FUNCTDATA* , int);
-FUNCTDATA* deleteFUNCTDATA(FUNCTDATA*);
-
-
 ARB* newARBNode(void*, FUNCTDATA*);
 ARB* freeARBNode(ARB*, FUNCTDATA*);
+#endif // _ARBDATA_
+
+
+
 ARB* detachMin(ARB*, ARB*);
 ARB* adjustARB(ARB*, FUNCTDATA*);
 int countARBNode(ARB*);

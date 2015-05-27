@@ -2,13 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "data.h"
-#include "ABR.h"
+
+#ifndef _DATA_H_
+    #define _DATA_H_
+
+    #include "data.h"
+
+#endif // _DATA_H_
+
+#ifndef _ARB_H_
+    #define _ARB_H_
+
+    #include "ABR.h"
+
+#endif // _ARB_H_
+
 
 /*****FUNZIONI*****/
-
-FUNCTDATA *initFUNCTDATA()
-{
+#ifndef _GEST_FUNCTDATA_
+#define _GEST_FUNCTDATA_
+FUNCTDATA *initFUNCTDATA(){
 	FUNCTDATA *ret=(FUNCTDATA *)malloc(sizeof(FUNCTDATA));
    	ret->fcomp=NULL;
    	ret->fcopy=NULL;
@@ -60,8 +73,12 @@ FUNCTDATA* deleteFUNCTDATA(FUNCTDATA* toDel){
     return NULL;
 }
 
+#endif // _GEST_FUNCTDATA_
 
-/**CREAZIONE NUOVO NODO**/
+#ifndef _GEST_ARBNODE_
+#define _GEST_ARBNODE_
+/**CREAZIONE 1NUOVO NODO**/
+
 ARB* newARBNode(void* toInsert, FUNCTDATA* funList){
     ARB* newNode=NULL;
     newNode=(ARB*)malloc(sizeof(ARB));//ALLOCAZIONENUOVO NODO
@@ -77,6 +94,7 @@ ARB* freeARBNode(ARB* node, FUNCTDATA* funList){
     free(node);
     return NULL;
 }
+#endif // _GEST_ARBNODE_
 
 /***CANCELLAZIONE NODO***/
 

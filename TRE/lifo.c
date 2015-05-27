@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lifo.h"
+
+#ifndef _LIFO_H_
+
+    #define _LIFO_H_
+
+    #include "lifo.h"
+
+#endif // _LIFO_H_
 
 
 

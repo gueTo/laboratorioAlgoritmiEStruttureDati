@@ -5,8 +5,8 @@
 int main(){
     ARB* prova=NULL;
     void* str=NULL;
-    FUNCT* l=initFUNCT();
-FUNCTtype(l,1);
+    FUNCTDATA* l=initFUNCTDATA();
+FUNCTDATAtype(l,1);
 
     str=insertInteger(str);
     prova=insertARBNodeIterative(prova, str, l);

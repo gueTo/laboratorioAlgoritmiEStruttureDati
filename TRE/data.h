@@ -1,6 +1,10 @@
 /***DICHIARAZIONE FUNZIONI***/
 
-#define STRING_MAX_SIZE 10
+#ifndef STRING_MAX_SIZE
+
+    #define STRING_MAX_SIZE 10
+
+#endif // STRING_MAX_SIZE
 
 void* insertString();
 void* insertInteger();

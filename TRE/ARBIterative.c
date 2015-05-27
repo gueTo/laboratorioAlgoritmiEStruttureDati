@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ARBIterative.h"
 
+#ifndef _ARB_ITERATIVE_H_
+    #define _ARB_ITERATIVE_H
+
+    #include "ARBIterative.h"
+
+#endif // _ARB_ITERATIVE_H_
 /***/
 
 
-
-
-FUNCT *initFUNCT(){
-	FUNCT *ret=(FUNCT *)malloc(sizeof(FUNCT));
+#ifndef _GEST_FUNCTDATA_
+#define _GEST_FUNCTDATA_
+FUNCTDATA *initFUNCTDATA(){
+	FUNCTDATA *ret=(FUNCTDATA *)malloc(sizeof(FUNCTDATA));
    	ret->fcomp=NULL;
    	ret->fcopy=NULL;
    	ret->fins=NULL;
@@ -20,7 +25,8 @@ FUNCT *initFUNCT(){
 	return ret;
 }
 
-void FUNCTtype(FUNCT* ret, int type){
+
+void FUNCTDATAtype(FUNCTDATA* ret, int type){
 	if(type==1){
         ret->fcomp=&compareInteger;
         ret->fcopy=&copyInteger;
@@ -53,14 +59,19 @@ void FUNCTtype(FUNCT* ret, int type){
 	}
 }
 
-FUNCT* deleteFUNCT(FUNCT* toDel){
+FUNCTDATA* deleteFUNCTDATA(FUNCTDATA* toDel){
     free(toDel);
     return NULL;
 }
 
+#endif // _GEST_FUNCTDATA_
 /***/
+
+#ifndef _GEST_ARBNODE_
+#define _GEST_ARBNODE_
 /**CREAZIONE 1NUOVO NODO**/
-ARB* newARBNode(void* toInsert, FUNCT* funList){
+
+ARB* newARBNode(void* toInsert, FUNCTDATA* funList){
     ARB* newNode=NULL;
     newNode=(ARB*)malloc(sizeof(ARB));//ALLOCAZIONENUOVO NODO
     newNode->element=funList->fcopy(newNode->element, toInsert);//ALLOCAZIONE MEMORIA PER LA STRINGA DA INSERIRE
@@ -70,18 +81,19 @@ ARB* newARBNode(void* toInsert, FUNCT* funList){
 }
 
 /***DEALLOCAZIONE NODO***/
-ARB* freeARBNode(ARB* node, FUNCT* funList){
+ARB* freeARBNode(ARB* node, FUNCTDATA* funList){
     funList->funfree(node->element);
     free(node);
     return NULL;
 }
+#endif // _GEST_ARBNODE_
 
 
 /*****************FUNZIONI RICHIESTE********************/
 /**come richiesto, tutte le istruzioni di ricorsione sono state
 "virtualizzate", dove necessario tramite la struttura dati chiamata STACK**/
 
-ARB* insertARBNodeIterative(ARB* ROOT, void* toIns, FUNCT* funList){
+ARB* insertARBNodeIterative(ARB* ROOT, void* toIns, FUNCTDATA* funList){
     ARB* temp;
     ARB* dad=NULL;
     //serve per fermare il ciclo
@@ -124,7 +136,7 @@ ARB* insertARBNodeIterative(ARB* ROOT, void* toIns, FUNCT* funList){
 
 /**questa cancellazione fa uso dello stack per tenere traccia
 dei figli del nodo che si andaranno a cancellare**/
-ARB* deleteARBIterative(ARB* ROOT, FUNCT* funList){
+ARB* deleteARBIterative(ARB* ROOT, FUNCTDATA* funList){
     //vengono usate due variabili puntatori a lifo
     //una per lo stack vero e proprio
     //l'altra, topStack, per una più comoda lettura del codice
@@ -169,7 +181,7 @@ ARB* deleteARBIterative(ARB* ROOT, FUNCT* funList){
 
 
 //pure qua viene utilizzato lo stack per la visita in pre order dell'albero
-void preOrderARBIter(ARB* toPrint, FUNCT* funList){
+void preOrderARBIter(ARB* toPrint, FUNCTDATA* funList){
     //è identico all'algoritmo precedente(cancellazione completa dell'albero)
     //ma invece di cancellare il nodo dopo aver messo nello stack i figli
     //esso viene visitato, in questo caso letto e stampao a video
@@ -194,7 +206,7 @@ void preOrderARBIter(ARB* toPrint, FUNCT* funList){
     }
 }
 
-void inOrderARBIter(ARB* toPrint, FUNCT* funList){
+void inOrderARBIter(ARB* toPrint, FUNCTDATA* funList){
     lifo* stackTree=NULL;
     lifo* temp=NULL;
     ARB* current=NULL;
@@ -229,7 +241,7 @@ void inOrderARBIter(ARB* toPrint, FUNCT* funList){
     }
 }
 
-void postOrder(ARB* toPrint, FUNCT* funList){
+void postOrder(ARB* toPrint, FUNCTDATA* funList){
     lifo* stackTree=NULL;
     lifo* temp=NULL;
     ARB* current=NULL;
@@ -269,7 +281,7 @@ void postOrder(ARB* toPrint, FUNCT* funList){
 }
 
 //cancellazione di un elemento richiesto
-ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCT* funList){
+ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCTDATA* funList){
     ARB* dad=NULL;
     ARB* current=ROOT;
     ARB* find=NULL;
@@ -358,7 +370,7 @@ ARB* searchAndDeleteIterative(ARB* ROOT, void* key, FUNCT* funList){
 }
 
 /**Cancellazione come sopra**/
-ARB* deleteNodeIter(ARB* ROOT, FUNCT* funList){
+ARB* deleteNodeIter(ARB* ROOT, FUNCTDATA* funList){
     ARB* current=ROOT;
     ARB* dad=NULL;
     void* temp;
@@ -396,7 +408,7 @@ ARB* deleteNodeIter(ARB* ROOT, FUNCT* funList){
 }
 
 
-ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCT* funList){
+ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, int odd, FUNCTDATA* funList){
     ARB* dad=NULL;
     ARB* current=ROOT;
     lifo* stack=NULL;
@@ -474,7 +486,7 @@ ARB* searchConditionAndDeleteIterative(ARB* ROOT, char* strMin, char* strMax, in
 
 /**funziona come la visita preorder, ma copio il nodo corrente
 in un nuovo nodo che inserisco nel nuovo albero**/
-ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCT* funList){
+ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCTDATA* funList){
     lifo* stackD=NULL;
     lifo* temp;
     ARB* current=original;
@@ -498,7 +510,7 @@ ARB* duplicateARBIterative(ARB* copy, ARB* original, FUNCT* funList){
 
 /**controllo scendendo nell'albero se i nodi sono uguali pushando
 contemporaneamente i candidati uguali, se sono diversi o come forma o come dato, esco dal ciclo*/
-int controlSameARBIterative(ARB* one, ARB* two, FUNCT* funList){
+int controlSameARBIterative(ARB* one, ARB* two, FUNCTDATA* funList){
     int ret=1;
 //    int i=0;
     lifo* stackC=NULL;
@@ -566,7 +578,7 @@ int countARBNodeIterative(ARB* ROOT){
 
 /**visita in order con copia nel vettore dell'albero**/
 
-void** vectorizeARBIterative(ARB* toVectorize, FUNCT* funList){
+void** vectorizeARBIterative(ARB* toVectorize, FUNCTDATA* funList){
     int size=countARBNodeIterative(toVectorize);
     void** result;
     int n=0;
@@ -594,7 +606,7 @@ void** vectorizeARBIterative(ARB* toVectorize, FUNCT* funList){
 }
 
 /**sarebbe meglio creare una struttura per gli estremi**/
-ARB* balanceARBIterative(ARB* toBalance, FUNCT* funList){
+ARB* balanceARBIterative(ARB* toBalance, FUNCTDATA* funList){
     /**costruisce prima l'array contenente i nodi dell'albero da bilanciare**/
     int n=countARBNodeIterative(toBalance);
     int i, j, k;

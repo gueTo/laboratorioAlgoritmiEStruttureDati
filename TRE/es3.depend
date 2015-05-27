@@ -1,31 +1,31 @@
 # depslib dependency file v1.0
-1431714123 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.c
+1432481833 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.c
 	<stdio.h>
 	<stdlib.h>
 	"ARBIterative.h"
 
-1431714400 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\es3.c
+1432481940 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\es3.c
 	<stdio.h>
 	<stdlib.h>
 	"ARBIterative.h"
 
-1429720092 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.c
+1432482013 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.c
 	<stdio.h>
 	<stdlib.h>
 	"lifo.h"
 
-1429561031 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.h
+1432482013 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\lifo.h
 
-1431713053 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.c
+1432481151 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"data.h"
 
-1431713053 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.h
+1432481152 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\data.h
 
-1432030850 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.h
+1432481912 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\tre\arbiterative.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1429549443 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.c
+1432480861 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"data.h"
 
-1429549443 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.h
+1432481150 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\data.h
 
 1429551517 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2.c
 	<stdio.h>
@@ -18,11 +18,11 @@
 
 1429549443 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2.h
 
-1429552019 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2main.c
+1432397769 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\es2main.c
 	<stdio.h>
 	<stdlib.h>
 	"data.h"
-	"es2.h"
+	"ABR.h"
 
 1430765577 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due - copia\data.c
 	<stdio.h>
@@ -40,4 +40,6 @@
 	"es2.h"
 
 1430766606 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due - copia\es2.h
+
+1432482099 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\due\abr.h
 

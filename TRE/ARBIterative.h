@@ -20,7 +20,7 @@ typedef int(* FUNCOM)(void*, void*);
 #endif // _FUNCOM_
 
 #ifndef _FUNPRINT_
-#define_FUNPRINT_
+#define _FUNPRINT_
 
 typedef void(* FUNPRINT)(void*);
 
@@ -54,6 +54,8 @@ typedef int(*FUNODD)(void*, int);
 
 #endif // _FUNOOD_
 
+#ifndef _FUNCTDATA_
+#define _FUNCTDATA_
 
 
 typedef struct func{
@@ -65,48 +67,61 @@ typedef struct func{
    	FUNPRINT fpri;
    	FUNDEL funfree;
    	int ty;
-}FUNCT;
+}FUNCTDATA;
 
+FUNCTDATA *initFUNCTDATA();
+void FUNCTDATAtype(FUNCTDATA* , int);
+FUNCTDATA* deleteFUNCTDATA(FUNCTDATA*);
+
+#endif // _FUNCTDATA_
+
+
+
+#ifndef _ARB_STRUCT_
+
+#define _ARB_STRUCT__
 typedef struct ARBType{
     void* element;
     struct ARBType* sx;
     struct ARBType* dx;
 }ARB;
 
+ARB* newARBNode(void*, FUNCTDATA*);
+ARB* freeARBNode(ARB*, FUNCTDATA*);
+
+
+#endif // _ARB_STRUCT_
+
+#ifndef _BOUNDARRAY_
+#define _BOUNDARRAY_
 typedef struct boundArray{
     int i;
     int j;
 }boundArray;
+#endif // _BOUNDARRAY_
 
 /****/
-
-ARB* newARBNode(void*, FUNCT*);
-ARB* freeARBNode(ARB*, FUNCT*);
-int countARBNode(ARB*);
 
 /****/
 
 
 
 
-ARB* insertARBNodeIterative(ARB*, void*, FUNCT*);
-ARB* deleteARBIterative(ARB*, FUNCT*);
-void preOrderARBIter(ARB*, FUNCT*);
-void inOrderARBIter(ARB*, FUNCT*);
-void postOrder(ARB*, FUNCT*);
-ARB* searchAndDeleteIterative(ARB*, void*, FUNCT*);
+ARB* insertARBNodeIterative(ARB*, void*, FUNCTDATA*);
+ARB* deleteARBIterative(ARB*, FUNCTDATA*);
+void preOrderARBIter(ARB*, FUNCTDATA*);
+void inOrderARBIter(ARB*, FUNCTDATA*);
+void postOrder(ARB*, FUNCTDATA*);
+ARB* searchAndDeleteIterative(ARB*, void*, FUNCTDATA*);
 
-ARB* deleteNodeIter(ARB*, FUNCT*);
-ARB* searchConditionAndDeleteIterative(ARB*, char*, char*, int, FUNCT*);
-ARB* duplicateARBIterative(ARB*, ARB*, FUNCT*);
-int controlSameARB(ARB*, ARB*, FUNCT*);
-int controlSameARBIterative(ARB*, ARB*, FUNCT*);
+ARB* deleteNodeIter(ARB*, FUNCTDATA*);
+ARB* searchConditionAndDeleteIterative(ARB*, char*, char*, int, FUNCTDATA*);
+ARB* duplicateARBIterative(ARB*, ARB*, FUNCTDATA*);
+int controlSameARB(ARB*, ARB*, FUNCTDATA*);
+int controlSameARBIterative(ARB*, ARB*, FUNCTDATA*);
 int countARBNodeIterative(ARB*);
 
-void** vectorizeARBIterative(ARB*, FUNCT*);
+void** vectorizeARBIterative(ARB*, FUNCTDATA*);
 
-ARB* balanceARBIterative(ARB*, FUNCT*);
+ARB* balanceARBIterative(ARB*, FUNCTDATA*);
 
-FUNCT *initFUNCT();
-void FUNCTtype(FUNCT* , int);
-FUNCT* deleteFUNCT(FUNCT*);

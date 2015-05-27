@@ -4,7 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "data.h"
+
+#ifndef _DATA_H_
+    #define _DATA_H_
+
+    #include "data.h"
+
+#endif
 
 
 /***

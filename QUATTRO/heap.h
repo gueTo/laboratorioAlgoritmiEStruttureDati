@@ -12,36 +12,70 @@ typedef void(*FUNDEL)(void*);
 
 #endif // _FUNDEL_
 
-typedef enum heapType {ARRAY_TYPE, TREE_TYPE} heapType;
+#ifndef _HEAPTYPE_
 
-typedef struct heapNode{
-    void* data;
-    int priority;
-}heapNode;
+    #define _HEAPTYPE_
+    typedef enum heapType {ARRAY_TYPE, TREE_TYPE} heapType;
 
-typedef struct heapABNode{
-    struct heapABNode* dad;
-    struct heapABNode* sx;
-    struct heapABNode* dx;
-    heapNode* element;
-}heapABNode;
+#endif // _HEAPTYPE_
 
-typedef struct ABHEAP{
-    heapABNode* HEAPROOT;
-}ABHEAP;
+#ifndef _HEAPNODE_
 
-typedef struct ARRAYHEAP{
-    heapNode* HEAP;
-    int HEAPDIM;
-}ARRAYHEAP;
+    #define _HEAPNODE_
 
-typedef struct heap{
-    ARRAYHEAP* heapArray;
-    ABHEAP* heapTree;
-    int HEAPSIZE;
-    struct FUNCTHEAP* function;
-    heapType type;
-}heap;
+    typedef struct heapNode{
+        void* data;
+        int priority;
+    }heapNode;
+
+#endif
+
+#ifndef _HEAPABNODE_
+
+    #define _HEAPABNODE_
+
+    typedef struct heapABNode{
+        struct heapABNode* dad;
+        struct heapABNode* sx;
+        struct heapABNode* dx;
+        heapNode* element;
+    }heapABNode;
+
+#endif // _HEAPABNODE_
+
+#ifndef _ABNODE_
+
+    #define _ABNODE_
+
+    typedef struct ABHEAP{
+        heapABNode* HEAPROOT;
+    }ABHEAP;
+
+#endif // _ABNODE_
+
+#ifndef _ARRAYHEAP_
+
+    #define _ARRAYHEAP_
+
+    typedef struct ARRAYHEAP{
+        heapNode* HEAP;
+        int HEAPDIM;
+    }ARRAYHEAP;
+
+#endif // _ARRAYHEAP_
+
+#ifndef _HEAP_
+
+    #define _HEAP_
+
+    typedef struct heap{
+        ARRAYHEAP* heapArray;
+        ABHEAP* heapTree;
+        int HEAPSIZE;
+        struct FUNCTHEAP* function;
+        heapType type;
+    }heap;
+#endif // _HEAP_
 
 
 typedef heap*(*FUNHEAPINS)(heap*, void*, int, FUNCPY);
@@ -53,19 +87,23 @@ typedef void(*FUNHEAPIFY)(heap*, int);
 typedef heap*(*FUNFREEHEAP)(heap*);
 typedef heap*(*FUNFREEHEAPANDELEMENT)(heap*, FUNDEL);
 
+#ifndef _FUNCTHEAP_
 
+    #define _FUNCTHEAP_
 
-typedef struct FUNCTHEAP{
-    FUNHEAPIFY heapify;
-    FUNHEAPMAX maxHeap;
-    FUNHEAPEXTRMAX extractMaxHeap;
-    FUNHEAPCHANGEPRI decreasePriorityHeap;
-    FUNHEAPCHANGEPRI increasePriorityHeap;
-    FUNHEAPDEL delKeyHeap;
-    FUNHEAPINS insKeyHeap;
-    FUNFREEHEAP freeOnlyHeap;
-    FUNFREEHEAPANDELEMENT freeAll;
-}FUNCTHEAP;
+    typedef struct FUNCTHEAP{
+        FUNHEAPIFY heapify;
+        FUNHEAPMAX maxHeap;
+        FUNHEAPEXTRMAX extractMaxHeap;
+        FUNHEAPCHANGEPRI decreasePriorityHeap;
+        FUNHEAPCHANGEPRI increasePriorityHeap;
+        FUNHEAPDEL delKeyHeap;
+        FUNHEAPINS insKeyHeap;
+        FUNFREEHEAP freeOnlyHeap;
+        FUNFREEHEAPANDELEMENT freeAll;
+    }FUNCTHEAP;
+
+#endif
 
 /***********************************************/
 int right(int);

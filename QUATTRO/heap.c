@@ -1,13 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "heap.h"
 #include "data.h"
+
+#ifndef _HEAP_H_
+
+    #define _HEAP_H_
+
+    #include "heap.h"
+
+#endif // _HEAP_H_
+
 /***********************************/
 
 /*************************************/
 
+#ifndef _GEST_FUNCTHEAP_
 
+#define _GEST_FUNCTHEAP_
 
 FUNCTHEAP* initFuncHeap(heapType typeH){
     FUNCTHEAP* ret=(FUNCTHEAP*)malloc(sizeof(FUNCTHEAP));
@@ -39,6 +49,8 @@ FUNCTHEAP* deleteFuncHeap(FUNCTHEAP* toDel){
     free(toDel);
     return NULL;
 }
+
+#endif // _GEST_FUNCTHEAP_
 
 
 heap* makeHeap(heapType TYPE, int n, heapNode* array, FUNCPY fcopy){
@@ -344,7 +356,6 @@ heap* makeTreeHeap(int n, heapNode* array, FUNCPY fcopy){
                 k++;
             }
             if(pointer[k-1]=='1'){
-                /****************array[curr].data vorrei fare la copia più che dare l'indirizzo****/
                 dad->dx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority, fcopy);
             }else if(pointer[k-1]=='0'){
                 dad->sx=makeHeapTreeNode(scroll, dad, array[curr].data, array[curr].priority, fcopy);

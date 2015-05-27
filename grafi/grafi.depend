@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1432589189 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\fifo.c
+	<stdio.h>
+	<stdlib.h>
+	"fifo.h"
+
+1432589203 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\fifo.h
+
+1432732774 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\graph.c
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	"fifo.h"
+	"list.h"
+
+1432657995 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
+	<stdio.h>
+	<stdlib.h>
+	"list.h"
+
+1432555861 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\mat.c
+	<stdlib.h>
+	<stdio.h>
+
+1432659737 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
+	"list.h"
+
