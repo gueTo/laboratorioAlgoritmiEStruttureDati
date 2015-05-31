@@ -9,7 +9,7 @@
 #define INFINITY INT_MAX
 
 
-static char *NOADJ="NONODEADJACENT";
+//static char *NOADJ="NONODEADJACENT";
 
 typedef enum {WHITE, GRAY, BLACK} COLOR;
 typedef enum {LIST, MATRIX} graphType;
@@ -82,23 +82,61 @@ graph* freeGraphMat(graph* );
 
 graph* addLinkLis(graph*, int , int , int);
 
+graph* removeVertLis(graph*, int);
+
+
+
+void printInteger(void* toPrint){
+    printf("%d", *(int*)(toPrint));
+}
+
+void printGraphNode(void* toPrint){
+    printf("linked to: ");
+    printf("%d", ((listLink*)(toPrint))->to);
+    printf(" with weight ");
+    printf("%d", ((listLink*)(toPrint))->weight);
+    printf("\n");
+}
+
 int main(){
-    graph* k, *o;
-    int i, j;
+    graph* k;
+    int i, j, n;
+    listLink* p;
     k=makeGraph(k, LIST, 3);
     k=makeList(k);
     list* scroll=NULL;
     k=addVertLis(k, NULL);
     k=addLinkLis(k,0, 1, 0);
+    k=addLinkLis(k,3, 1, 0);
+    k=addLinkLis(k,3, 0, 0);
+    k=addLinkLis(k,3, 2, 0);
+    k=addLinkLis(k,0, 3, 0);
     for(i=0; i<k->numNodes; i++){
-        printf("%d ", k->GRAPHLIST->nodes[i].node);
+        printf("\n%d\n", k->GRAPHLIST->nodes[i].node);
         scroll=k->GRAPHLIST->nodes[i].adj;
         j=0;
         while(scroll!=NULL){
-            j++;
+                j++;
+            printGraphNode((scroll->elem));
             scroll=scroll->next;
-        };
-        printf(": %d\n", j);
+            getchar();
+        }
+        printf(": %d", j);
+    }
+    k=removeVertLis(k, 2);
+
+    printf("\n\n");
+    for(i=0; i<k->numNodes; i++){
+        printf("\n%d\n", k->GRAPHLIST->nodes[i].node);
+        scroll=k->GRAPHLIST->nodes[i].adj;
+        j=0;
+        while(scroll!=NULL){
+                j++;
+            printGraphNode((scroll->elem));
+            scroll=scroll->next;
+            getchar();
+        }
+        printf(": %d", j);
     }
     return 0;
 }
@@ -473,19 +511,17 @@ graph* makeList(graph* newGraph){
 
 graph* addVertLis(graph* Ngraph, void* inf){
     if(Ngraph!=NULL){
-
         if(Ngraph->GRAPHLIST!=NULL){
             if(Ngraph->numNodes>=Ngraph->GRAPHLIST->sizeOfArray){
                 Ngraph->GRAPHLIST->sizeOfArray=Ngraph->GRAPHLIST->sizeOfArray+((Ngraph->GRAPHLIST->sizeOfArray)/2);
                 Ngraph->GRAPHLIST->nodes=(graphNode*)realloc(Ngraph->GRAPHLIST->nodes, sizeof(graphNode)*Ngraph->GRAPHLIST->sizeOfArray);
-//                Ngraph->GRAPHLIST->adj=(list*)realloc(Ngraph->GRAPHLIST->adj, sizeof(list)*Ngraph->GRAPHLIST->sizeOfArray);
             }
+            Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].info=inf;
+            Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].node=Ngraph->numNodes;
+            Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].adj=NULL;
+            (Ngraph->numNodes)++;
         }
     }
-    Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].info=inf;
-    Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].node=Ngraph->numNodes;
-    Ngraph->GRAPHLIST->nodes[Ngraph->numNodes].adj=NULL;
-    (Ngraph->numNodes)++;
     return Ngraph;
 }
 
@@ -496,14 +532,70 @@ void* copyListLink(void* original, void* ret){
     return ret;
 }
 
+int compareListLink(void* a, void* b){
+    int toa;
+    int tob;
+    toa=((listLink*)a)->to;
+    tob=((listLink*)b)->to;
+    printf("\n%d %d", toa, tob);
+    if(toa>tob)
+        return 1;
+    if(toa<tob)
+        return -1;
+    return 0;
+}
+
+void deleteListLink(void* toDel){
+    free(((listLink*)toDel));
+}
+
 graph* addLinkLis(graph* Ngraph, int from, int to, int wei){
-    listLink ins;
+    listLink *ins;
     if(Ngraph!=NULL){
         if(Ngraph->GRAPHLIST!=NULL){
-            if(from<GRAPH->numNodes && to<GRAPH->numNodes && from>=0 && to>=0){
-                ins.to=to;
-                ins.weight=wei;
-                Ngraph->GRAPHLIST->nodes[from].adj=insertNodeList(Ngraph->GRAPHLIST->nodes[from].adj, &ins, copyListLink);
+            if(from<Ngraph->numNodes && to<Ngraph->numNodes && from>=0 && to>=0){
+                ins=(listLink*)malloc(sizeof(listLink));
+                ins->to=to;
+                ins->weight=wei;
+                Ngraph->GRAPHLIST->nodes[from].adj=insertNodeList(Ngraph->GRAPHLIST->nodes[from].adj, ins, copyListLink);
+            }
+        }
+    }
+    return Ngraph;
+}
+
+
+
+graph* removeVertLis(graph* Ngraph, int toDel){
+    int i;
+    list* scroll;
+    list* dec;
+    void* info;
+    int* t=toDel;
+    if(Ngraph!=NULL){
+        if(Ngraph->GRAPHLIST!=NULL){
+            if(toDel<Ngraph->numNodes){
+                scroll=Ngraph->GRAPHLIST->nodes[toDel].adj;
+                info=Ngraph->GRAPHLIST->nodes[toDel].info;
+                for(i=toDel;i<Ngraph->numNodes-1; i++){
+                    Ngraph->GRAPHLIST->nodes[i].adj=Ngraph->GRAPHLIST->nodes[i+1].adj;
+                    Ngraph->GRAPHLIST->nodes[i].info=Ngraph->GRAPHLIST->nodes[i+1].info;
+                }
+                Ngraph->numNodes--;
+                for(i=0; i<Ngraph->numNodes; i++){
+                    dec=Ngraph->GRAPHLIST->nodes[i].adj;
+                    if(dec!=NULL){
+                        dec=deleteNodeFromList(dec, Ngraph->GRAPHLIST->nodes[toDel].adj->elem, compareListLink, deleteListLink);
+                    }
+                    while(dec!=NULL){
+                        if(((listLink*)(dec->elem))->to>toDel){
+                            ((listLink*)(dec->elem))->to--;
+                        }
+                        dec=dec->next;
+                    }
+                }
+                freeList(scroll, deleteListLink);
+                free(info);
             }
         }
     }

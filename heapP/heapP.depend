@@ -1,0 +1,41 @@
+# depslib dependency file v1.0
+1433022695 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\abr.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+	"ABR.h"
+
+1433022564 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\data.h
+
+1433022694 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\abr.h
+	"data.h"
+
+1433022523 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1433092785 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\heap.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"ABR.h"
+	"data.h"
+	"heap.h"
+
+1433092755 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\heap.h
+	"ABR.h"
+	"data.h"
+
+1433092755 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\heapp\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"ABR.h"
+	"data.h"
+	"heap.h"
+

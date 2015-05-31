@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="ABR.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ABR.h" />
 		<Unit filename="data.c">
 			<Option compilerVar="CC" />
 		</Unit>
