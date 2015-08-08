@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1433022523 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\list\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1438968719 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\list\data.h
+
+1438968846 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\list\list.c
+	<stdlib.h>
+	<stdio.h>
+	"data.h"
+	"list.h"
+
+1439034785 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\list\list.h
+
