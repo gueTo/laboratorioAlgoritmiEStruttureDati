@@ -1,3 +1,5 @@
+#ifndef _LIST_H_
+    #define _LIST_H_
     #include "data.h"
 
     typedef struct LIST_NODE{
@@ -37,4 +39,3 @@
 
     LIST pop(LIST);
 #endif // _LIST_H_
-
