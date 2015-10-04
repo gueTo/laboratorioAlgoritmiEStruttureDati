@@ -1,0 +1,48 @@
+# depslib dependency file v1.0
+1440604078 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
+	<stdio.h>
+	<stdlib.h>
+	"data.h"
+	"list.h"
+
+1443543430 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"data.h"
+	"hash.h"
+	"correspondence.h"
+
+1440590842 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1443544947 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.h
+
+1443463620 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.c
+	<stdlib.h>
+	<stdio.h>
+	"list.h"
+	"hash.h"
+
+1440604073 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
+	<stdio.h>
+
+1443436452 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.h
+	"list.h"
+	<stdio.h>
+
+1443543305 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.c
+	"correspondence.h"
+	"list.h"
+
+1443543420 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.h
+	<stdlib.h>
+	"hash.h"
+	"data.h"
+
+1443543100 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\cc.c
+

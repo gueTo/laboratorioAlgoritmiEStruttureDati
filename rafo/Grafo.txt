@@ -1,0 +1,6 @@
+(6)Napoli -> (230)Roma (310)ReggioCalabria Torino ;
+Roma -> (330)Mestre (180) Napoli ;
+Milano -> Milano Torino Mestre ;
+Torino -> (140)Milano ;
+ReggioCalabria -> Mestre ; .
+Mestre -> .

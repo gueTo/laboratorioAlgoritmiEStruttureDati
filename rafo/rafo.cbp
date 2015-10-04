@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="rafo" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/rafo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/rafo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Corrispondenze.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Grafo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="IOGrafo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ListeAdiacenza.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="MatriceAdiacenza.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="TabellaHash.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Visite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funzioniMenu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/Corrispondenze.h" />
+		<Unit filename="include/Grafo.h" />
+		<Unit filename="include/IOGrafo.h" />
+		<Unit filename="include/ListeAdiacenza.h" />
+		<Unit filename="include/MatriceAdiacenza.h" />
+		<Unit filename="include/TabellaHash.h" />
+		<Unit filename="include/Visite.h" />
+		<Unit filename="include/funzioniMenu.h" />
+		<Unit filename="include/list.h" />
+		<Unit filename="include/listastringhe.h" />
+		<Unit filename="include/queue.h" />
+		<Unit filename="list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="listastringhe.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,89 @@
+# depslib dependency file v1.0
+1306158576 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\corrispondenze.c
+	"include\Corrispondenze.h"
+
+1306158734 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\corrispondenze.h
+	"TabellaHash.h"
+
+1306158156 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\tabellahash.h
+	"list.h"
+
+1306687799 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\list.h
+	<stdio.h>
+	<time.h>
+
+1307716920 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\funzionimenu.c
+	"include\funzioniMenu.h"
+
+1306173648 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\funzionimenu.h
+	<stdio.h>
+	<stdlib.h>
+	"Grafo.h"
+	"IOGrafo.h"
+	"listastringhe.h"
+	"ListeAdiacenza.h"
+	"MatriceAdiacenza.h"
+	"Visite.h"
+
+1307716668 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\grafo.h
+	"Corrispondenze.h"
+	"list.h"
+
+1306158208 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\iografo.h
+	"Grafo.h"
+
+1306158689 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\listastringhe.h
+	<stdio.h>
+
+1307131100 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\listeadiacenza.h
+	"Grafo.h"
+
+1307131100 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\matriceadiacenza.h
+	"Grafo.h"
+	<math.h>
+
+1306689979 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\visite.h
+	"Grafo.h"
+	"queue.h"
+
+1306158651 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\include\queue.h
+	<stdio.h>
+
+1307717012 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\grafo.c
+	"include\Grafo.h"
+
+1307286420 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\iografo.c
+	"include\IOGrafo.h"
+
+1307312124 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\list.c
+	"include\list.h"
+
+1306158626 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\listastringhe.c
+	"include\listastringhe.h"
+
+1307312244 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\listeadiacenza.c
+	"include\ListeAdiacenza.h"
+
+1307115508 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\main.c
+	<stdio.h>
+	<stdlib.h>
+	"include\Grafo.h"
+	"include\IOGrafo.h"
+	"include\funzioniMenu.h"
+	"include\listastringhe.h"
+	"include\ListeAdiacenza.h"
+	"include\MatriceAdiacenza.h"
+	"include\Visite.h"
+
+1307199762 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\matriceadiacenza.c
+	"include\MatriceAdiacenza.h"
+
+1439835133 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\queue.c
+	"include\queue.h"
+
+1306158614 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\tabellahash.c
+	"include\TabellaHash.h"
+
+1316528247 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\rafo\visite.c
+	"include\Visite.h"
+

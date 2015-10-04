@@ -1,0 +1,63 @@
+# Project: Grafo
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = 
+OBJ  = main.o Corrispondenze.o list.o listastringhe.o TabellaHash.o Grafo.o ListeAdiacenza.o Visite.o queue.o MatriceAdiacenza.o IOGrafo.o funzioniMenu.o $(RES)
+LINKOBJ  = main.o Corrispondenze.o list.o listastringhe.o TabellaHash.o Grafo.o ListeAdiacenza.o Visite.o queue.o MatriceAdiacenza.o IOGrafo.o funzioniMenu.o $(RES)
+LIBS =  -L"D:/Dev-Cpp/lib"  -g3 
+INCS =  -I"D:/Dev-Cpp/include" 
+CXXINCS =  -I"D:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"D:/Dev-Cpp/include/c++/3.4.2/backward"  -I"D:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"D:/Dev-Cpp/include/c++/3.4.2"  -I"D:/Dev-Cpp/include" 
+BIN  = Grafo.exe
+CXXFLAGS = $(CXXINCS)   -O3 -g3
+CFLAGS = $(INCS)   -O3 -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Grafo.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "Grafo.exe" $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+Corrispondenze.o: Corrispondenze.c
+	$(CC) -c Corrispondenze.c -o Corrispondenze.o $(CFLAGS)
+
+list.o: list.c
+	$(CC) -c list.c -o list.o $(CFLAGS)
+
+listastringhe.o: listastringhe.c
+	$(CC) -c listastringhe.c -o listastringhe.o $(CFLAGS)
+
+TabellaHash.o: TabellaHash.c
+	$(CC) -c TabellaHash.c -o TabellaHash.o $(CFLAGS)
+
+Grafo.o: Grafo.c
+	$(CC) -c Grafo.c -o Grafo.o $(CFLAGS)
+
+ListeAdiacenza.o: ListeAdiacenza.c
+	$(CC) -c ListeAdiacenza.c -o ListeAdiacenza.o $(CFLAGS)
+
+Visite.o: Visite.c
+	$(CC) -c Visite.c -o Visite.o $(CFLAGS)
+
+queue.o: queue.c
+	$(CC) -c queue.c -o queue.o $(CFLAGS)
+
+MatriceAdiacenza.o: MatriceAdiacenza.c
+	$(CC) -c MatriceAdiacenza.c -o MatriceAdiacenza.o $(CFLAGS)
+
+IOGrafo.o: IOGrafo.c
+	$(CC) -c IOGrafo.c -o IOGrafo.o $(CFLAGS)
+
+funzioniMenu.o: funzioniMenu.c
+	$(CC) -c funzioniMenu.c -o funzioniMenu.o $(CFLAGS)

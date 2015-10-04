@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1433022523 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1438968719 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\data.h
+
+1439035795 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\list.c
+	<stdlib.h>
+	<stdio.h>
+	"data.h"
+	"list.h"
+
+1439480271 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\list.h
+	"data.h"
+
+1439480121 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\main.c
+	"list.h"
+	"data.h"
+
+1439482297 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\hash\hash.c
+	"list.h"
+	"data.h"
+	<stdlib.h>
+	<stdio.h>
+
