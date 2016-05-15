@@ -1,48 +1,73 @@
 # depslib dependency file v1.0
-1440604078 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
-	<stdio.h>
+1463008999 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
 	<stdlib.h>
-	"data.h"
+	<stdio.h>
 	"list.h"
-
-1443543430 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	"data.h"
-	"hash.h"
 	"correspondence.h"
 
-1440590842 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.c
+1463336798 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\main.c
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1463330422 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"data.h"
 
-1443544947 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.h
+1463330400 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.h
+	<stdio.h>
 
-1443463620 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.c
+1463076575 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.c
+	<stdio.h>
 	<stdlib.h>
-	<stdio.h>
-	"list.h"
-	"hash.h"
-
-1440604073 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
-	<stdio.h>
-
-1443436452 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.h
-	"list.h"
-	<stdio.h>
-
-1443543305 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.c
+	<string.h>
 	"correspondence.h"
 	"list.h"
-
-1443543420 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.h
-	<stdlib.h>
 	"hash.h"
+
+1462277124 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
 	"data.h"
 
+1443698678 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.h
+	"list.h"
+
+1462880117 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.c
+	"data.h"
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+
+1443811425 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.h
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+
 1443543100 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\cc.c
+
+1463336667 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafi.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"hash.h"
+	"correspondence.h"
+	"list.h"
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1463336437 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.c
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1463336756 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafi.h
+	"correspondence.h"
+
+1463336756 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.h
+	"grafi.h"
 

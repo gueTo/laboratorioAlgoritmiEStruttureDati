@@ -16,6 +16,7 @@ LIST_OPERATION* initListOperation(FUNINS insert, FUNCPY copy, FUNDEL dealloc, FU
 
 LIST_NODE* newNode(void* newElement, LIST_OPERATION* operation, void* parameter){
     LIST_NODE* ret=(LIST_NODE*)malloc(sizeof(LIST_NODE));
+
     ret->element=operation->cpy(ret->element, newElement, parameter);
 
     ret->next_node=NULL;
@@ -40,12 +41,15 @@ LIST insertNewNode(LIST list, void* newElement, LIST_OPERATION* operation, void*
 }
 
 LIST_NODE* searchNode(LIST list, void* toSearch, LIST_OPERATION* operation, void* parameter){
+    LIST_NODE* ret=NULL;
     if(list!=NULL){
        if(operation->compare(list->element, toSearch, parameter)==0){
-          return list;
+          ret=list;
+          return ret;
        }else if(operation->compare(list->element, toSearch, parameter)<0){
           return searchNode(list->next_node, toSearch, operation, parameter);
-       }else return NULL;
+       }else
+            return NULL;
     }else return NULL;
 }
 
@@ -96,10 +100,27 @@ LIST deleteList(LIST list, LIST_OPERATION* operation, void* parameter){
     return list;
 }
 
+LIST push(LIST list, LIST_OPERATION* operation, void* elem, void* param){
+    LIST_NODE* nodo;
+
+    nodo=newNode(elem, operation, param);
+
+    nodo->next_node=list;
+    return nodo;
+}
+
+int listIsEmpty(LIST list){
+    if(list!=NULL)
+        return 0;
+    return 1;
+}
+
 LIST_NODE* top(LIST list){
     return list;
 }
 
 LIST pop(LIST list){
-    return list->next_node;
+    if(listIsEmpty(list)!=1)
+        return list->next_node;
+    return list;
 }

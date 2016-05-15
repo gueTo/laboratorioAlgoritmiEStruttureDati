@@ -7,6 +7,18 @@
 
 #ifndef _GEST_FUNCTDATA_
 #define _GEST_FUNCTDATA_
+FUNCTDATA *initFUNCTDATA_2(FUNINS ins, FUNCPY cpy, FUNRAND ran, FUNCOM com, FUNODD odd, FUNPRINT prin, FUNDEL fre){
+    FUNCTDATA* ret=(FUNCTDATA*)malloc(sizeof(FUNCTDATA));
+	ret->fins=ins;
+	ret->fcopy=cpy;
+   	ret->frand=ran;
+   	ret->fcomp=com;
+   	ret->fodd=odd;
+   	ret->fpri=prin;
+   	ret->funfree=fre;
+    return ret;
+}
+
 
 FUNCTDATA *initFUNCTDATA(){
 	FUNCTDATA *ret=(FUNCTDATA *)malloc(sizeof(FUNCTDATA));

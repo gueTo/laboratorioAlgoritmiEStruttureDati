@@ -35,7 +35,11 @@
 
     LIST deleteList(LIST, LIST_OPERATION*, void*);
 
-    LIST_NODE* top(LIST );
+    LIST push(LIST, LIST_OPERATION*, void*, void*);
+
+    int listIsEmpty(LIST);
+
+    LIST_NODE* top(LIST);
 
     LIST pop(LIST);
 #endif // _LIST_H_

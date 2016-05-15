@@ -6,12 +6,25 @@
 /**/
 #include "list.h"
 #include "hash.h"
+/*
+HASH_OPERATION* initHashOperation(FUNHASH hashing, FUNCOLLISION collision){
+    printf("kappa\n");
+    HASH_OPERATION* operation=(HASH_OPERATION*)malloc(sizeof(HASH_OPERATION));
+    printf("kappa\n");
+
+    operation->gestCollision=collision;
+    printf("kappa\n");
+    operation->hashing=hashing;
+    printf("kappa\n");
+    return operation;
+}
+*/
 
 HASH_OPERATION* initHashOperation(FUNHASH hashing, FUNCOLLISION collision){
-    HASH_OPERATION* operation=(HASH_OPERATION*)malloc(sizeof(HASH_OPERATION));
-    operation->gestCollision=collision;
-    operation->hashing=hashing;
-    return operation;
+    HASH_OPERATION* oper=(HASH_OPERATION*)malloc(sizeof(HASH_OPERATION));
+    oper->hashing=hashing;
+    oper->gestCollision=collision;
+    return oper;
 }
 
 HASH_TABLE* initHashTable(long unsigned int dimension, LIST_OPERATION* l_operation, HASH_OPERATION* h_operation){
@@ -57,8 +70,11 @@ HASH_TABLE* insertIntoHashTable(HASH_TABLE* table, void* toInsert, void* paramet
 HASH_TABLE* deleteFromHashTable(HASH_TABLE* table, void* toDel, void* parameter){
     long unsigned int index;
     if(table!=NULL){
+//fprintf(stdout, "\nHASH: %s", (char*)((CORRESPONDENCE*)(toDel))->ID);
+
         index=table->h_operation->hashing(toDel, parameter)%(table->dimension);
         table->table[index]=deleteNodeFromList(table->table[index], toDel, table->l_operation, parameter);
+        //printHashTable(stdout, table, NULL);
     }
     return table;
 }
@@ -67,8 +83,9 @@ void* searchIntoHashTable(HASH_TABLE* table, void* toSearch, void* parameter){
     long unsigned int index;
     if(table!=NULL){
         index=table->h_operation->hashing(toSearch, parameter)%(table->dimension);
-        void* n=searchNode(table->table[index], toSearch, table->l_operation, parameter)->element;
-        return n;
+        LIST_NODE* n=searchNode(table->table[index], toSearch, table->l_operation, parameter);
+        if(n!=NULL)
+            return n->element;
     }
     return NULL;
 }
