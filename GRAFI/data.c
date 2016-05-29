@@ -7,64 +7,18 @@
 
 #ifndef _GEST_FUNCTDATA_
 #define _GEST_FUNCTDATA_
-FUNCTDATA *initFUNCTDATA_2(FUNINS ins, FUNCPY cpy, FUNRAND ran, FUNCOM com, FUNODD odd, FUNPRINT prin, FUNDEL fre){
+FUNCTDATA *initFUNCTDATA(FUNINS ins, FUNCPY cpy, FUNRAND ran, FUNCOM com, FUNODD odd, FUNHASH has, FUNCOLLISION coll, FUNPRINT prin, FUNDEL fre){
     FUNCTDATA* ret=(FUNCTDATA*)malloc(sizeof(FUNCTDATA));
 	ret->fins=ins;
 	ret->fcopy=cpy;
    	ret->frand=ran;
    	ret->fcomp=com;
+   	ret->fhas=has;
+   	ret->fcoll=coll;
    	ret->fodd=odd;
    	ret->fpri=prin;
    	ret->funfree=fre;
     return ret;
-}
-
-
-FUNCTDATA *initFUNCTDATA(){
-	FUNCTDATA *ret=(FUNCTDATA *)malloc(sizeof(FUNCTDATA));
-   	ret->fcomp=NULL;
-   	ret->fcopy=NULL;
-   	ret->fins=NULL;
-   	ret->fodd=NULL;
-    ret->frand=NULL;
-    ret->funfree=NULL;
-    ret->fpri=NULL;
-    ret->ty=-1;
-	return ret;
-}
-
-
-void FUNCTDATAtype(FUNCTDATA* ret, int type){
-	if(type==1){
-        ret->fcomp=&compareInteger;
-        ret->fcopy=&copyInteger;
-        ret->fins=&insertInteger;
-        ret->fodd=&oddInteger;
-        ret->frand=&casualInteger;
-        ret->funfree=&deleteInteger;
-        ret->fpri=&printInteger;
-        ret->ty=1;
-	}
-	if(type==2){
-        ret->fcomp=&compareFloat;
-        ret->fcopy=&copyFloat;
-        ret->fins=&insertFloat;
-        ret->fodd=&oddFloat;
-        ret->frand=&casualFloat;
-        ret->funfree=&deleteFloat;
-        ret->fpri=&printFloat;
-        ret->ty=2;
-	}
-	if(type==3){
-        ret->fcomp=&compareString;
-        ret->fcopy=&copyString;
-        ret->fins=&insertString;
-        ret->fodd=&oddString;
-        ret->frand=&casualString;
-        ret->funfree=&deleteString;
-        ret->fpri=&printString;
-        ret->ty=3;
-	}
 }
 
 FUNCTDATA* deleteFUNCTDATA(FUNCTDATA* toDel){
@@ -219,7 +173,7 @@ void* deleteFloat(void* f, void* parameter){
 }
 
 void* copyString(void* cop, void* original, void* parameter){
-    cop=(char*)malloc(sizeof(char)*strlen(original));
+    cop=(char*)malloc(sizeof(char)*(strlen(original)+1));
     strcpy((char*)cop, (char*)original);
     return cop;
 }
@@ -247,4 +201,32 @@ int oddFloat(void* isOdd, int odd, void* parameter){
 
 int oddString(void* isOdd, int odd, void* parameter){
     return((strlen((char*)isOdd)%2)==odd);
+}
+
+
+
+
+void* collisionString(void* toCollide){
+    return NULL;
+}
+
+
+unsigned long int hashingString(void *toHash, void *parameter){{
+    unsigned long hash = 5381;
+    char* str=(char*)toHash;
+    int c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
+}
+}
+
+unsigned long int hashingInteger(void *toHash, void *parameter){
+    return *(unsigned long int*)toHash;
+}
+
+void* collisionInteger(void* toCollide){
+    return NULL;
 }

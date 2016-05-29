@@ -21,23 +21,20 @@ OUTPUT:
 Alloca, inizializza e restituisce il puntatore di una tabella delle corrispondenze
 
 ****/
-CORRESPONDENCE_TABLE* initCorresponcendeTable(unsigned int dimension,
-                                              LIST_OPERATION* IDListOperation, LIST_OPERATION* IndexListOperation,
-                                              HASH_OPERATION* IDHashOperation, HASH_OPERATION* IndexHashOperation){
-//printf("%d\n", dimension);
+CORRESPONDENCE_TABLE* initCorresponcendeTable(unsigned int dimension, FUNCTDATA* IDOperation, FUNCTDATA* IndexOperation){
     CORRESPONDENCE_TABLE* newCorrTable=(CORRESPONDENCE_TABLE*)malloc(sizeof(CORRESPONDENCE_TABLE));
-    newCorrTable->correspondenceID=initHashTable(dimension, IDListOperation, IDHashOperation);
-    newCorrTable->correspondenceIndex=initHashTable(dimension, IndexListOperation, IndexHashOperation);
+    newCorrTable->correspondenceID=initHashTable(dimension, IDOperation);
+    newCorrTable->correspondenceIndex=initHashTable(dimension, IndexOperation);
     return newCorrTable;
 }
 
 
 /****
-CORRESPONDENCE* newCorrespondence(void* ID, unsigned int index, FUNCPY cpy, void* parameter)
+CORRESPONDENCE* newCorrespondence(void* ID, unsigned int index, FUNCPY fcopy, void* parameter)
 INPUT:
 -ID: puntatore all'informazione che si vuole inserire
 -index: l'indice in cui è conservata l'informazione
--cpy: puntatore alla funzione di copia per l'ID
+-fcopy: puntatore alla funzione di copia per l'ID
 -parameter: un puntatore ad informazioni di supporto, come una funzione o un ulteriore dato,
             che può servire come parametro ulteriore per la funzione di copia
 
@@ -45,10 +42,12 @@ OUTPUT:
 Alloca e restituisce il puntatore ad una corrispondenza
 
 ****/
-CORRESPONDENCE* newCorrespondence(void* ID, unsigned int index, FUNCPY cpy, void* parameter){
+CORRESPONDENCE* newCorrespondence(void* ID, unsigned int index, FUNCTDATA* IDoperation, FUNCTDATA* IndexOperation, void* parameter){
     CORRESPONDENCE* ret=(CORRESPONDENCE*)malloc(sizeof(CORRESPONDENCE));
-    ret->ID=cpy(ret->ID, ID, parameter);
+    ret->ID=IDoperation->fcopy(ret->ID, ID, parameter);
     ret->index=index;
+//        ret->index=IndexOperation->fcopy(ret->index, index, parameter);
+
     return ret;
 }
 
@@ -63,22 +62,39 @@ INPUT:
 OUTPUT:
 Inserisce in corrTable una nuova corrispondenza, e restituisce il puntatore alla tabella aggiornata
 ****/
-CORRESPONDENCE_TABLE* insertIntoCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, CORRESPONDENCE* toInsert, void* parameter){
+CORRESPONDENCE_TABLE* insertIntoCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, CORRESPONDENCE* toInsert, FUNCTDATA* IDoperation, FUNCTDATA* indexOperation, void* parameter){
     void* ft;
+    void *st;
+    void* tt;
     if(corrTable!=NULL){
         /****sostituisco funzione copia con una funzione pigra*****/
-        ft=corrTable->correspondenceID->l_operation->cpy;
-        corrTable->correspondenceID->l_operation->cpy=fakeCopy;
-            corrTable->correspondenceID=insertIntoHashTable(corrTable->correspondenceID, toInsert, parameter);
-        /****rimetto a posto*****/
-        corrTable->correspondenceID->l_operation->cpy=ft;
+        ft=corrTable->correspondenceID->l_operation->fcopy;
+        corrTable->correspondenceID->l_operation->fcopy=fakeCopy;
+        st=corrTable->correspondenceID->l_operation->fhas;
+        corrTable->correspondenceID->l_operation->fhas=hashCorrespondenceID;
+        tt=corrTable->correspondenceID->l_operation->fcomp;
+        corrTable->correspondenceID->l_operation->fcomp=compareCorrespondenceByID;
 
-        /****sostituisco funzione copia con una funzione pigra*****/
-        ft=corrTable->correspondenceIndex->l_operation->cpy;
-        corrTable->correspondenceIndex->l_operation->cpy=fakeCopy;
-            corrTable->correspondenceIndex=insertIntoHashTable(corrTable->correspondenceIndex, toInsert, parameter);
+            corrTable->correspondenceID=insertIntoHashTable(corrTable->correspondenceID, toInsert, IDoperation);
         /****rimetto a posto*****/
-        corrTable->correspondenceIndex->l_operation->cpy=ft;
+
+        corrTable->correspondenceID->l_operation->fcopy=ft;
+        corrTable->correspondenceID->l_operation->fhas=st;
+        corrTable->correspondenceID->l_operation->fcomp=tt;
+        /****sostituisco funzione copia con una funzione pigra*****/
+
+        ft=corrTable->correspondenceIndex->l_operation->fcopy;
+        corrTable->correspondenceIndex->l_operation->fcopy=fakeCopy;
+        st=corrTable->correspondenceID->l_operation->fhas;
+        corrTable->correspondenceIndex->l_operation->fhas=hashCorrespondenceIndex;
+        tt=corrTable->correspondenceID->l_operation->fcomp;
+        corrTable->correspondenceIndex->l_operation->fcomp=compareCorrespondenceByIndex;
+            corrTable->correspondenceIndex=insertIntoHashTable(corrTable->correspondenceIndex, toInsert, indexOperation);
+
+        /****rimetto a posto*****/
+        corrTable->correspondenceIndex->l_operation->fcopy=ft;
+        corrTable->correspondenceIndex->l_operation->fhas=st;
+        corrTable->correspondenceIndex->l_operation->fcomp=tt;
     }
     return corrTable;
 }
@@ -95,17 +111,18 @@ INPUT:
 OUTPUT:
 - NON PREVEDE OUTPUT
 ****/
-void printCorrespondenceTable(FILE* fp, CORRESPONDENCE_TABLE* corrTable, void* parameter){
+void printCorrespondenceTable(FILE* fp, CORRESPONDENCE_TABLE* corrTable, FUNCTDATA* IDoperation, FUNCTDATA* indexOperation, void* parameter){
     void* ft;
     if(corrTable!=NULL){
-        ft=corrTable->correspondenceID->l_operation->print;
-        corrTable->correspondenceID->l_operation->print=printIDCorrespondence;
-            printHashTable(fp, corrTable->correspondenceID, ft);
-        corrTable->correspondenceID->l_operation->print=ft;
-        ft=corrTable->correspondenceIndex->l_operation->print;
-        corrTable->correspondenceIndex->l_operation->print=printIndexCorrespondence;
-            printHashTable(fp, corrTable->correspondenceIndex, NULL);
-        corrTable->correspondenceIndex->l_operation->print=ft;
+        ft=corrTable->correspondenceID->l_operation->fpri;
+        corrTable->correspondenceID->l_operation->fpri=printIDCorrespondence;
+            printHashTable(fp, corrTable->correspondenceID, IDoperation);
+        corrTable->correspondenceID->l_operation->fpri=ft;
+
+        ft=corrTable->correspondenceIndex->l_operation->fpri;
+        corrTable->correspondenceIndex->l_operation->fpri=printIndexCorrespondence;
+            printHashTable(fp, corrTable->correspondenceIndex, indexOperation);
+        corrTable->correspondenceIndex->l_operation->fpri=ft;
     }
 }
 
@@ -122,16 +139,21 @@ OUTPUT:
 - Restituisce il puntatore alla corrispondenza in cui si trova l'informazione cercata,
   o un puntatore a NULL nel caso non sia stata trovata
 ****/
-CORRESPONDENCE* searchIDIntoCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, void* toSearch, void* parameter){
+CORRESPONDENCE* searchIDIntoCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, void* toSearch, FUNCTDATA* IDoperation, void* parameter){
     CORRESPONDENCE* ret=NULL;
     CORRESPONDENCE temp;
-    void* ft;
+    void *ft, *st;
     if(corrTable!=NULL){
         temp.ID=toSearch;
-        ft=corrTable->correspondenceID->l_operation->compare;
-        corrTable->correspondenceID->l_operation->compare=compareCorrespondenceByID;
-        ret=searchIntoHashTable(corrTable->correspondenceID, &temp, compareString);
-        corrTable->correspondenceID->l_operation->compare=ft;
+        ft=corrTable->correspondenceID->l_operation->fcomp;
+        corrTable->correspondenceID->l_operation->fcomp=compareCorrespondenceByID;
+        st=corrTable->correspondenceID->l_operation->fhas;
+        corrTable->correspondenceID->l_operation->fhas=hashCorrespondenceID;
+
+            ret=searchIntoHashTable(corrTable->correspondenceID, &temp, IDoperation);
+
+        corrTable->correspondenceID->l_operation->fcomp=ft;
+        corrTable->correspondenceID->l_operation->fhas=st;
     }
     return ret;
 }
@@ -155,10 +177,10 @@ CORRESPONDENCE* searchIndexIntoCorrespondeceTable(CORRESPONDENCE_TABLE* corrTabl
     void* ft;
     if(corrTable!=NULL){
         temp.index=toSearch;
-        ft=corrTable->correspondenceIndex->l_operation->compare;
-        corrTable->correspondenceIndex->l_operation->compare=compareCorrespondenceByIndex;
-            ret=searchIntoHashTable(corrTable->correspondenceIndex, &temp, ft);
-        corrTable->correspondenceIndex->l_operation->compare=ft;
+        ft=corrTable->correspondenceIndex->l_operation->fcomp;
+        corrTable->correspondenceIndex->l_operation->fcomp=compareCorrespondenceByIndex;
+            ret=searchIntoHashTable(corrTable->correspondenceIndex, &(temp.index), ft);
+        corrTable->correspondenceIndex->l_operation->fcomp=ft;
     }
     return ret;
 }
@@ -176,37 +198,45 @@ OUTPUT:
 - Restituisce il puntatore alla tabella della corrispondenze aggiornata, se l'elemento esisteva ed è stato eliminato,
   altrimenti restituisce semplicemente il puntatore alla tabella data in ingresso, che non viene modificata
 ****/
-CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByID(CORRESPONDENCE_TABLE* corrTable, void* toDelete, void* parameter){
-    CORRESPONDENCE* td;
-    FUNDEL ft;
-    FUNCOM comPar;
+CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByID(CORRESPONDENCE_TABLE* corrTable, void* toDelete, FUNCTDATA* IDoperation, FUNCTDATA* indexOperation, void* parameter){
+    CORRESPONDENCE* toRemove;
+    void *ft;
+    void* st;
+    void* tt;
     if(corrTable!=NULL){
-        td=searchIDIntoCorrespondenceTable(corrTable, toDelete, parameter);
-        comPar=corrTable->correspondenceID->l_operation->compare;
-        if(td!=NULL){
-//            corrTable->correspondenceID->l_operation->compare=compareCorrespondenceByID;
-            ft=corrTable->correspondenceID->l_operation->del;
-            corrTable->correspondenceID->l_operation->del=fakeDel;
+        toRemove=searchIDIntoCorrespondenceTable(corrTable, toDelete, IDoperation, parameter);
+        printString(stdout, toRemove->ID, NULL);
+        printf(" %d\n", toRemove->index);
+        if(toRemove!=NULL){
+            ft=corrTable->correspondenceID->l_operation->fhas;
+            st=corrTable->correspondenceID->l_operation->fcomp;
+            tt=corrTable->correspondenceID->l_operation->funfree;
 
-                corrTable->correspondenceID=deleteFromHashTable(corrTable->correspondenceID, td, comPar);
+            corrTable->correspondenceID->l_operation->fhas=hashCorrespondenceID;
+            corrTable->correspondenceID->l_operation->fcomp=compareCorrespondenceByID;
+            corrTable->correspondenceID->l_operation->funfree=fakeDel;
 
-            corrTable->correspondenceID->l_operation->compare=comPar;
-            corrTable->correspondenceID->l_operation->del=ft;
+                corrTable->correspondenceID=deleteFromHashTable(corrTable->correspondenceID, toRemove, IDoperation);
+
+            corrTable->correspondenceID->l_operation->fhas=ft;
+            corrTable->correspondenceID->l_operation->fcomp=st;
+            corrTable->correspondenceID->l_operation->funfree=tt;
 
 
+            ft=corrTable->correspondenceIndex->l_operation->fhas;
+            st=corrTable->correspondenceIndex->l_operation->fcomp;
+  //          tt=corrTable->correspondenceIndex->l_operation->funfree;
 
-            ft=corrTable->correspondenceIndex->l_operation->del;
-            comPar=corrTable->correspondenceIndex->l_operation->compare;
+            corrTable->correspondenceIndex->l_operation->fhas=hashCorrespondenceIndex;
+            corrTable->correspondenceIndex->l_operation->fcomp=compareCorrespondenceByIndex;
+            //corrTable->correspondenceID->l_operation->funfree=fakeDel;
 
-            corrTable->correspondenceIndex->l_operation->del=fakeDel;
-            corrTable->correspondenceIndex->l_operation->compare=compareCorrespondenceByIndex;
+                corrTable->correspondenceIndex=deleteFromHashTable(corrTable->correspondenceIndex, toRemove, indexOperation);
 
-                corrTable->correspondenceIndex=deleteFromHashTable(corrTable->correspondenceIndex, td, comPar);
+            corrTable->correspondenceIndex->l_operation->fhas=ft;
+            corrTable->correspondenceIndex->l_operation->fcomp=st;
+//            corrTable->correspondenceIndex->l_operation->funfree=tt;
 
-            corrTable->correspondenceIndex->l_operation->del=ft;
-            corrTable->correspondenceID->l_operation->compare=comPar;
-
-            deleteCorrespondence(td, corrTable->correspondenceID->l_operation->del);
         }
     }
     return corrTable;
@@ -225,36 +255,36 @@ OUTPUT:
 - Restituisce la tabella della corrispondenze aggiornata, se l'elemento esisteva ed è stato eliminato,
   altrimenti restituisce semplicemente il puntatore alla tabella data in ingresso, che non viene modificata
 ****/
-CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByIndex(CORRESPONDENCE_TABLE* corrTable, unsigned long int toDelete, void* parameter){
+CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByIndex(CORRESPONDENCE_TABLE* corrTable, unsigned long int toDelete, FUNCTDATA* IDoperation, void* parameter){
     CORRESPONDENCE* td;
     FUNDEL ft;
     FUNCOM comPar;
     if(corrTable!=NULL){
         td=searchIndexIntoCorrespondeceTable(corrTable, toDelete, parameter);
 
-        comPar=corrTable->correspondenceID->l_operation->compare;
-//        corrTable->correspondenceID->l_operation->compare=compareCorrespondenceByID;
+        comPar=corrTable->correspondenceID->l_operation->fcomp;
+//        corrTable->correspondenceID->l_operation->fcomp=compareCorrespondenceByID;
 
-        ft=corrTable->correspondenceID->l_operation->del;
-        corrTable->correspondenceID->l_operation->del=fakeDel;
+        ft=corrTable->correspondenceID->l_operation->funfree;
+        corrTable->correspondenceID->l_operation->funfree=fakeDel;
 
             corrTable->correspondenceID=deleteFromHashTable(corrTable->correspondenceID, td, comPar);
 
-        corrTable->correspondenceID->l_operation->compare=comPar;
-        corrTable->correspondenceID->l_operation->del=ft;
+        corrTable->correspondenceID->l_operation->fcomp=comPar;
+        corrTable->correspondenceID->l_operation->funfree=ft;
 
-        ft=corrTable->correspondenceIndex->l_operation->del;
-        comPar=corrTable->correspondenceIndex->l_operation->compare;
+        ft=corrTable->correspondenceIndex->l_operation->funfree;
+        comPar=corrTable->correspondenceIndex->l_operation->fcomp;
 
-        corrTable->correspondenceIndex->l_operation->del=fakeDel;
-        corrTable->correspondenceIndex->l_operation->compare=compareCorrespondenceByIndex;
+        corrTable->correspondenceIndex->l_operation->funfree=fakeDel;
+        corrTable->correspondenceIndex->l_operation->fcomp=compareCorrespondenceByIndex;
 
             corrTable->correspondenceIndex=deleteFromHashTable(corrTable->correspondenceIndex, td, comPar);
 
-        corrTable->correspondenceIndex->l_operation->del=ft;
-        corrTable->correspondenceID->l_operation->compare=comPar;
+        corrTable->correspondenceIndex->l_operation->funfree=ft;
+        corrTable->correspondenceID->l_operation->fcomp=comPar;
 
-        deleteCorrespondence(td, corrTable->correspondenceID->l_operation->del);
+        deleteCorrespondence(td, corrTable->correspondenceID->l_operation->funfree);
     }
     return corrTable;
 }
@@ -270,22 +300,22 @@ INPUT:
 OUTPUT:
 -Dealloca tutta la tabella delle corrispondenze e restituisce un puntatore a NULL;
 ****/
-CORRESPONDENCE_TABLE* freeCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, void* parameter){
+CORRESPONDENCE_TABLE* freeCorrespondenceTable(CORRESPONDENCE_TABLE* corrTable, FUNCTDATA* IDoperation, void* parameter){
     FUNDEL fun;
     if(corrTable!=NULL){
-        fun=corrTable->correspondenceIndex->l_operation->del;
-        corrTable->correspondenceIndex->l_operation->del=fakeDel;
+        fun=corrTable->correspondenceIndex->l_operation->funfree;
+        corrTable->correspondenceIndex->l_operation->funfree=fakeDel;
             freeHashTable(corrTable->correspondenceIndex, NULL);
-        corrTable->correspondenceIndex->l_operation->del=fun;
+        corrTable->correspondenceIndex->l_operation->funfree=fun;
 
-        fun=corrTable->correspondenceID->l_operation->del;
-        corrTable->correspondenceID->l_operation->del=deleteCorrespondence;
+        fun=corrTable->correspondenceID->l_operation->funfree;
+        corrTable->correspondenceID->l_operation->funfree=deleteCorrespondence;
+
             freeHashTable(corrTable->correspondenceID, fun);
-        corrTable->correspondenceID->l_operation->del=fun;
-free(corrTable->correspondenceID->l_operation);
-free(corrTable->correspondenceID->h_operation);
-free(corrTable->correspondenceIndex->l_operation);
-free(corrTable->correspondenceIndex->h_operation);
+
+        corrTable->correspondenceID->l_operation->funfree=fun;
+        free(corrTable->correspondenceID->l_operation);
+        free(corrTable->correspondenceIndex->l_operation);
         free(corrTable);
         corrTable=NULL;
     }
@@ -326,8 +356,7 @@ Ritorna -1 se l'ID di a è minore dell'ID di b
 Ritorna 1 se l'ID di a è maggiore dell'ID di b
 ****/
 int compareCorrespondenceByID(void* a, void* b, void* parameter){
-
-    FUNCOM temp=(FUNCOM)parameter;
+    FUNCOM temp=((FUNCTDATA*)parameter)->fcomp;
     return temp(((CORRESPONDENCE*)a)->ID, ((CORRESPONDENCE*)b)->ID, NULL);
 }
 
@@ -378,7 +407,9 @@ OUTPUT:
 Restituisce l'indice di hashing dell'ID
 ****/
 unsigned long int hashCorrespondenceID(void* toHash, void* parameter){
-    return hashingString(((CORRESPONDENCE*)toHash)->ID, parameter);
+
+    FUNHASH hashing=((FUNCTDATA*)(parameter))->fhas;
+    return hashing(((CORRESPONDENCE*)toHash)->ID, parameter);
 }
 
 /****
@@ -392,7 +423,8 @@ OUTPUT:
 Restituisce l'indice di hashing dell'indice
 ****/
 unsigned long int hashCorrespondenceIndex(void* toHash, void* parameter){
-    return ((CORRESPONDENCE*)toHash)->index;
+    FUNHASH hashing=((FUNCTDATA*)(parameter))->fhas;
+    return hashing(&((CORRESPONDENCE*)toHash)->index, parameter);
 }
 
 /****
@@ -407,8 +439,9 @@ OUTPUT:
 - NON PREVEDE OUTPUT
 ****/
 void printIDCorrespondence(FILE* fp, void* toPrint, void* parameter){
-    FUNPRINT temp=(FUNPRINT)parameter;
+    FUNPRINT temp=((FUNCTDATA*)(parameter))->fpri;
     temp(fp, ((CORRESPONDENCE*)toPrint)->ID, NULL);
+  // printString(fp, ((CORRESPONDENCE*)toPrint)->ID, NULL);
 }
 
 /****
@@ -435,11 +468,12 @@ INPUT:
 OUTPUT:
 - NON PREVEDE OUTPUT
 ****/
-void printCorrespondence(FILE* fp, void*toPrint, void*paramater){
+void printCorrespondence(FILE* fp, void*toPrint, void* parameter){
     if(toPrint!=NULL){
-        printIDCorrespondence(fp, toPrint, printString);
-        fprintf(stdout, "\n");
+        printIDCorrespondence(fp, toPrint, parameter);
+        fprintf(fp, " ");
         printIndexCorrespondence(fp, toPrint, NULL);
+        fprintf(fp, "\n");
     }
 }
 

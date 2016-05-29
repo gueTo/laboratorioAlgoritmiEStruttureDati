@@ -24,15 +24,15 @@ typedef struct CORRESPONDENCE_TABLE{
 }CORRESPONDENCE_TABLE;
 
 
-CORRESPONDENCE_TABLE* initCorresponcendeTable(unsigned int, LIST_OPERATION*, LIST_OPERATION*, HASH_OPERATION*, HASH_OPERATION*);
-CORRESPONDENCE* newCorrespondence(void*, unsigned int, FUNCPY, void*);
-CORRESPONDENCE_TABLE* insertIntoCorrespondenceTable(CORRESPONDENCE_TABLE*, CORRESPONDENCE*, void*);
-void printCorrespondenceTable(FILE*, CORRESPONDENCE_TABLE*, void*);
-CORRESPONDENCE* searchIDIntoCorrespondenceTable(CORRESPONDENCE_TABLE*, void*, void*);
+CORRESPONDENCE_TABLE* initCorresponcendeTable(unsigned int, FUNCTDATA*, FUNCTDATA*);
+CORRESPONDENCE* newCorrespondence(void*, unsigned int, FUNCTDATA*, FUNCTDATA*, void*);
+CORRESPONDENCE_TABLE* insertIntoCorrespondenceTable(CORRESPONDENCE_TABLE*, CORRESPONDENCE*, FUNCTDATA*, FUNCTDATA*, void*);
+void printCorrespondenceTable(FILE*, CORRESPONDENCE_TABLE*, FUNCTDATA*, FUNCTDATA*,  void*);
+CORRESPONDENCE* searchIDIntoCorrespondenceTable(CORRESPONDENCE_TABLE*, void*, FUNCTDATA*, void*);
 CORRESPONDENCE* searchIndexIntoCorrespondenceTable(CORRESPONDENCE_TABLE*, unsigned long int, void*);
-CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByID(CORRESPONDENCE_TABLE*, void*, void*);
-CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByIndex(CORRESPONDENCE_TABLE*, unsigned long int, void*);
-CORRESPONDENCE_TABLE* freeCorrespondenceTable(CORRESPONDENCE_TABLE*, void*);
+CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByID(CORRESPONDENCE_TABLE*, void*, FUNCTDATA*, FUNCTDATA*, void*);
+CORRESPONDENCE_TABLE* removeFromCorrespondenceTableByIndex(CORRESPONDENCE_TABLE*, unsigned long int, FUNCTDATA*, void*);
+CORRESPONDENCE_TABLE* freeCorrespondenceTable(CORRESPONDENCE_TABLE*, FUNCTDATA*, void*);
 
 /*************FUNZIONI DI SUPPORTO*************/
 void* fakeDel(void*, void*);

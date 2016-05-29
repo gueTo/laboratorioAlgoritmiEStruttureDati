@@ -60,6 +60,8 @@ typedef int(*FUNODD)(void*, int, void*);
 
 #endif // _FUNOOD_
 
+    typedef long unsigned int(*FUNHASH)(void*, void*);
+    typedef void*(*FUNCOLLISION)(void*);
 
 
 
@@ -72,14 +74,13 @@ typedef struct func{
    	FUNRAND frand;
    	FUNCOM fcomp;
    	FUNODD fodd;
+   	FUNHASH fhas;
+   	FUNCOLLISION fcoll;
    	FUNPRINT fpri;
    	FUNDEL funfree;
-   	int ty;
 }FUNCTDATA;
 
-FUNCTDATA *initFUNCTDATA();
-FUNCTDATA *initFUNCTDATA_2(FUNINS, FUNCPY, FUNRAND, FUNCOM, FUNODD, FUNPRINT, FUNDEL);
-void FUNCTDATAtype(FUNCTDATA* , int);
+FUNCTDATA *initFUNCTDATA(FUNINS, FUNCPY, FUNRAND, FUNCOM, FUNODD, FUNHASH, FUNCOLLISION, FUNPRINT, FUNDEL);
 FUNCTDATA* deleteFUNCTDATA(FUNCTDATA*);
 
 #endif // _FUNCTDATA_
@@ -107,6 +108,11 @@ void* copyFloat(void*, void*, void*);
 int oddInteger(void*, int, void*);
 int oddFloat(void*, int, void*);
 int oddString(void*, int, void*);
+
+unsigned long int hashingInteger(void*, void*);
+unsigned long int hashingString(void*, void*);
+void* collisionInteger(void*);
+void* collisionString(void*);
 
 
 

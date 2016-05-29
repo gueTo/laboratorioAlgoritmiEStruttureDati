@@ -4,28 +4,30 @@
 
 #include "correspondence.h"
 
-LIST_OPERATION* initListOperation(FUNINS insert, FUNCPY copy, FUNDEL dealloc, FUNCOM compare, FUNPRINT print){
+LIST_OPERATION* initListOperation(FUNINS insert, FUNCPY copy, FUNDEL dealloc, FUNCOM compare, FUNPRINT print, FUNHASH has, FUNCOLLISION coll){
     LIST_OPERATION* operation=(LIST_OPERATION*)malloc(sizeof(LIST_OPERATION));
     operation->ins=insert;
     operation->cpy=copy;
     operation->del=dealloc;
     operation->compare=compare;
     operation->print=print;
+    operation->coll=coll;
+    operation->has=has;
     return operation;
 }
 
-LIST_NODE* newNode(void* newElement, LIST_OPERATION* operation, void* parameter){
+LIST_NODE* newNode(void* newElement, FUNCTDATA* operation, void* parameter){
     LIST_NODE* ret=(LIST_NODE*)malloc(sizeof(LIST_NODE));
 
-    ret->element=operation->cpy(ret->element, newElement, parameter);
+    ret->element=operation->fcopy(ret->element, newElement, parameter);
 
     ret->next_node=NULL;
     return ret;
 }
 
-LIST insertNewNode(LIST list, void* newElement, LIST_OPERATION* operation, void* parameter){
+LIST insertNewNode(LIST list, void* newElement, FUNCTDATA* operation, void* parameter){
     if(list!=NULL){
-        if(operation->compare(list->element, newElement, parameter)<0){
+        if(operation->fcomp(list->element, newElement, parameter)<0){
             list->next_node=insertNewNode(list->next_node, newElement, operation, parameter);
         }else{
             LIST_NODE* nn=newNode(newElement, operation, parameter);
@@ -40,26 +42,28 @@ LIST insertNewNode(LIST list, void* newElement, LIST_OPERATION* operation, void*
     return list;
 }
 
-LIST_NODE* searchNode(LIST list, void* toSearch, LIST_OPERATION* operation, void* parameter){
+LIST_NODE* searchNode(LIST list, void* toSearch, FUNCTDATA* operation, void* parameter){
     LIST_NODE* ret=NULL;
+    int cmp=0;
     if(list!=NULL){
-       if(operation->compare(list->element, toSearch, parameter)==0){
+        cmp=operation->fcomp(list->element, toSearch, parameter);
+       if(cmp==0){
           ret=list;
           return ret;
-       }else if(operation->compare(list->element, toSearch, parameter)<0){
+       }else if(cmp<0){
           return searchNode(list->next_node, toSearch, operation, parameter);
        }else
             return NULL;
     }else return NULL;
 }
 
-void printNode(FILE* fp, LIST_NODE* node, LIST_OPERATION* operation, void* parameter){
+void printNode(FILE* fp, LIST_NODE* node, FUNCTDATA* operation, void* parameter){
     if(node!=NULL){
-        operation->print(fp, node->element, parameter);
+        operation->fpri(fp, node->element, parameter);
     }
 }
 
-void printList(FILE* fp, LIST list, LIST_OPERATION* operation, void* parameter){
+void printList(FILE* fp, LIST list, FUNCTDATA* operation, void* parameter){
     if(list!=NULL){
         printNode(fp, list, operation, parameter);
         fprintf(fp, " ");
@@ -67,40 +71,40 @@ void printList(FILE* fp, LIST list, LIST_OPERATION* operation, void* parameter){
     }else fprintf(fp, "\n");
 }
 
-LIST_NODE* deleteNode(LIST_NODE*toDel, LIST_OPERATION* operation, void* parameter){
+LIST_NODE* deleteNode(LIST_NODE*toDel, FUNCTDATA* operation, void* parameter){
     if(toDel!=NULL){
-        toDel->element=operation->del(toDel->element, parameter);
+        toDel->element=operation->funfree(toDel->element, parameter);
         free(toDel);
         toDel=NULL;
     }
     return toDel;
 }
 
-LIST deleteNodeFromList(LIST list, void* toDel, LIST_OPERATION* operation, void* parameter){
+LIST deleteNodeFromList(LIST list, void* toDel, FUNCTDATA* operation, void* parameter){
     LIST_NODE *temp;
     if(list!=NULL){
-        if(operation->compare(list->element, toDel, parameter)==0){
+        if(operation->fcomp(list->element, toDel, parameter)==0){
             temp=list->next_node;
             list=deleteNode(list, operation, parameter);
             return temp;
-        }else if(operation->compare(list->element, toDel, parameter)<0){
+        }else if(operation->fcomp(list->element, toDel, parameter)<0){
             list->next_node=deleteNodeFromList(list->next_node, toDel, operation, parameter);
             return list;
         }else return list;
     }else return list;
 }
 
-LIST deleteList(LIST list, LIST_OPERATION* operation, void* parameter){
+LIST deleteList(LIST list, FUNCTDATA* operation, void* parameter){
     if(list!=NULL){
         list->next_node=deleteList(list->next_node, operation, parameter);
-        operation->del(list->element, parameter);
+        operation->funfree(list->element, parameter);
         free(list);
         list=NULL;
     }
     return list;
 }
 
-LIST push(LIST list, LIST_OPERATION* operation, void* elem, void* param){
+LIST push(LIST list, FUNCTDATA* operation, void* elem, void* param){
     LIST_NODE* nodo;
 
     nodo=newNode(elem, operation, param);

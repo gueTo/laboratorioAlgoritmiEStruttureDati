@@ -21,7 +21,7 @@ typedef struct GRAPH_NODE{
 
 typedef struct GRAPH{
     GRAPH_NODE **vertici;
-    LIST_OPERATION* operationInt;
+    FUNCTDATA* operationInt;
     FUNCTDATA *operationID;//?
     int numVerticiUsati;
     int dimensioneArrayVertici;
@@ -66,6 +66,6 @@ GRAPH* rimuoviArcoGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* da, void
 int esisteArcoGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* da, void* a, void* parameter);
 void stampaGrafoMatrice(FILE* fp, GRAPH* grafo);
 GRAPH* eliminaGrafo(GRAPH* grafo, void* parameter);
-CORRESPONDENCE_TABLE* initCorrGraph(GRAPH* grafo, HASH_OPERATION* hash_id, LIST_OPERATION* list_id);
+CORRESPONDENCE_TABLE* initCorrGraph(GRAPH* grafo, FUNCTDATA* list_id);
 GRAPH* init(GRAPH* graf,int dim, FUNINS ins, FUNCPY cpy, FUNDEL del, FUNCOM comp, FUNPRINT pri, FUNHASH has, FUNCOLLISION coll);
 #endif

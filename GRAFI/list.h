@@ -13,29 +13,31 @@
         FUNDEL del;
         FUNPRINT print;
         FUNINS ins;
+        FUNHASH has;
+        FUNCOLLISION coll;
     }LIST_OPERATION;
 
     typedef LIST_NODE* LIST;
 
-    LIST_OPERATION* initListOperation(FUNINS, FUNCPY, FUNDEL, FUNCOM, FUNPRINT);
+    LIST_OPERATION* initListOperation(FUNINS, FUNCPY, FUNDEL, FUNCOM, FUNPRINT, FUNHASH, FUNCOLLISION);
 
-    LIST_NODE* newNode(void*, LIST_OPERATION*, void*);
+    LIST_NODE* newNode(void*, FUNCTDATA*, void*);
 
-    LIST insertNewNode(LIST, void*, LIST_OPERATION*, void*);
+    LIST insertNewNode(LIST, void*, FUNCTDATA*, void*);
 
-    LIST_NODE* searchNode(LIST, void*, LIST_OPERATION*, void*);
+    LIST_NODE* searchNode(LIST, void*, FUNCTDATA*, void*);
 
-    void printNode(FILE*, LIST_NODE*, LIST_OPERATION*, void*);
+    void printNode(FILE*, LIST_NODE*, FUNCTDATA*, void*);
 
-    void printList(FILE*, LIST, LIST_OPERATION*, void*);
+    void printList(FILE*, LIST, FUNCTDATA*, void*);
 
-    LIST deleteNodeFromList(LIST, void*, LIST_OPERATION*, void*);
+    LIST deleteNodeFromList(LIST, void*, FUNCTDATA*, void*);
 
-    LIST_NODE* deleteNode(LIST_NODE*, LIST_OPERATION*, void*);
+    LIST_NODE* deleteNode(LIST_NODE*, FUNCTDATA*, void*);
 
-    LIST deleteList(LIST, LIST_OPERATION*, void*);
+    LIST deleteList(LIST, FUNCTDATA*, void*);
 
-    LIST push(LIST, LIST_OPERATION*, void*, void*);
+    LIST push(LIST, FUNCTDATA*, void*, void*);
 
     int listIsEmpty(LIST);
 

@@ -2,7 +2,7 @@
   LIBRERIA PER LA GESTIONE DI GRAFI
   Header per la gestione di rappresentazioni
   di archi mediante liste di adiacenza
-  
+
   di Francesco Altiero, matr. 566/2258
   email: auronisback@hotmail.com                       */
 
@@ -19,7 +19,7 @@ typedef struct
   OPERAZIONI *fun; //le funzioni da utilizzare per le liste di archi definite
                    //in questo header
   LIST *liste; //l'array delle liste di adiacenza
-  
+
 } LIST_ADJ;
 #endif
 
@@ -58,8 +58,8 @@ void *InizializzaIteratoreListaAdj(GRAPH grafo, unsigned int indiceVertice);
 //input: - GRAPH grafo: il grafo, qui non utilizzato
 //       - unsigned int indiceVertice: il vertice di cui leggere l'arco successivo, qui
 //                                     non utilizzato ed inserito per specifiche
-//       - void *iter: un puntatore all'iteratore   
-//output: l'arco successivo                   
+//       - void *iter: un puntatore all'iteratore
+//output: l'arco successivo
 GRAPH_ARC GetArcoSuccessivoListaAdj(GRAPH grafo, unsigned int indiceVertice, void *iter);
 
 
@@ -77,7 +77,6 @@ int EsisteArcoListaAdj(GRAPH grafo, unsigned int dalVertice, unsigned int alVert
 //       - unsigned int nuovoIndice: il valore del nuovo indice del vertice
 //output: il grafo modificato (se necessario)
 GRAPH OttimizzaArchiListaAdj(GRAPH grafo, unsigned int vecchioIndice, unsigned int nuovoIndice);
-
 
 //Cancella un arco dalla lista di adiacenza
 //input: - GRAPH grafo: il grafo
@@ -151,6 +150,6 @@ void DeallocaArco(void *x, void *param);
 //Legge un valore arco da file
 //input: void *fp: un puntatore al file
 //       - void *param: parametro non utilizzato inserito per specifiche
-//output: un puntatore ad un dato da inserire nella lista 
+//output: un puntatore ad un dato da inserire nella lista
 void *LeggiArcoDaInput(void *fp, void *param);
 

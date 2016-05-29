@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="GrafoListaAdiacenza.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="GrafoListaAdiacenza.h" />
 		<Unit filename="GrafoMatriceAdiacenza.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -46,6 +50,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="data.h" />
+		<Unit filename="gafoListAdj.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="grafi.c">
 			<Option compilerVar="CC" />
 		</Unit>

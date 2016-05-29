@@ -19,10 +19,8 @@ GRAPH_NODE* nuovoVertice(GRAPH* grafo, GRAPH_NODE* nodo, void* id){
 GRAPH* inserisciVerticeGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* id, void* parameter){
     int nuovoIndice;
     int i;
-    //int j, k;
     CORRESPONDENCE* nuovaCorrispondenza;
     GRAPH_NODE** nuovo;
-  //  int**nuovaMatrice;
     if(grafo!=NULL){
         if(listIsEmpty(grafo->listaNodiLiberi)){
             grafo->dimensioneArrayVertici=grafo->dimensioneArrayVertici*2+1;
@@ -31,8 +29,7 @@ GRAPH* inserisciVerticeGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* id,
                 nuovo[i]=NULL;
             }
             for(i=0; i<grafo->numVerticiUsati; i++){
-                nuovo[i]=nuovoVertice(grafo, nuovo[i], id);
-                /**eccetera**/
+                nuovo[i]=nuovoVertice(grafo, nuovo[i], grafo->vertici[i]->id);
             }
             for(i=grafo->dimensioneArrayVertici-1; i>=grafo->numVerticiUsati; i--){
                 grafo->listaNodiLiberi=push(grafo->listaNodiLiberi, grafo->operationInt, &i, NULL);
@@ -45,26 +42,30 @@ GRAPH* inserisciVerticeGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* id,
                 }
             }
             grafo->vertici=nuovo;
-
             grafo=operation->inserisciVertice(grafo);
+
         }
         nuovoIndice=*(int*)(top(grafo->listaNodiLiberi)->element);
         grafo->listaNodiLiberi=pop(grafo->listaNodiLiberi);
         grafo->vertici[nuovoIndice]=nuovoVertice(grafo, grafo->vertici[nuovoIndice], id);
         grafo->numVerticiUsati++;
-        nuovaCorrispondenza=newCorrespondence(id, nuovoIndice, grafo->correspondence->correspondenceID->l_operation->cpy, NULL);
-        grafo->correspondence=insertIntoCorrespondenceTable(grafo->correspondence, nuovaCorrispondenza, NULL);
+        nuovaCorrispondenza=newCorrespondence(id, nuovoIndice, grafo->operationID, grafo->operationInt, NULL);
+        grafo->correspondence=insertIntoCorrespondenceTable(grafo->correspondence, nuovaCorrispondenza, grafo->operationID, grafo->operationInt, grafo->operationID);
+
     }
+
     return grafo;
 }
 
 GRAPH_NODE* cercaVerticeGrafo(GRAPH* grafo, void* ID, void* parameter){
     CORRESPONDENCE* find=NULL;
     if(grafo!=NULL){
-        find=searchIDIntoCorrespondenceTable(grafo->correspondence, ID, parameter);
+
+        find=searchIDIntoCorrespondenceTable(grafo->correspondence, ID, grafo->operationID, parameter);
         if(find!=NULL){
             return grafo->vertici[find->index];
         }
+
     }
     return NULL;
 }
@@ -72,12 +73,11 @@ GRAPH_NODE* cercaVerticeGrafo(GRAPH* grafo, void* ID, void* parameter){
 GRAPH* cancellaVerticeGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* ID, void* parameter){
     CORRESPONDENCE* find=NULL;
     int indice;
-//    int i;
     if(grafo!=NULL){
-        find=searchIDIntoCorrespondenceTable(grafo->correspondence, ID, parameter);
+        find=searchIDIntoCorrespondenceTable(grafo->correspondence, ID, grafo->operationID, parameter);
         if(find!=NULL){
             indice=find->index;
-            grafo->correspondence=removeFromCorrespondenceTableByID(grafo->correspondence, ID, parameter);
+            grafo->correspondence=removeFromCorrespondenceTableByID(grafo->correspondence, ID, grafo->operationID, grafo->operationInt, parameter);
 
             grafo->vertici[indice]=grafo->operationID->funfree(grafo->vertici[indice]->id, parameter);
             free(grafo->vertici[indice]);
@@ -93,12 +93,11 @@ GRAPH* aggiungiArcoGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* da, voi
     CORRESPONDENCE *findDa=NULL;
     CORRESPONDENCE *findA=NULL;
     if(grafo!=NULL){
-        findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, parameter);
+        findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, grafo->operationID, parameter);
         if(findA!=NULL){
-            findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, parameter);
+            findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, grafo->operationID, parameter);
             if(findDa!=NULL){
                 grafo=operation->inserisciArco(grafo, findDa->index, findA->index, peso);
-                //((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[findDa->index][findA->index]=peso;
             }
         }
     }
@@ -109,12 +108,11 @@ GRAPH* rimuoviArcoGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* da, void
     CORRESPONDENCE *findDa=NULL;
     CORRESPONDENCE *findA=NULL;
     if(grafo!=NULL){
-        findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, parameter);
+        findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, grafo->operationID, parameter);
         if(findA!=NULL){
-            findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, parameter);
+            findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, grafo->operationID, parameter);
             if(findDa!=NULL){
                 grafo=operation->eliminaArco(grafo, findDa->index, findA->index);
-                //((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[findDa->index][findA->index]=NESSUN_ARCO;
             }
         }
     }
@@ -125,10 +123,11 @@ int esisteArcoGrafo(GRAPH* grafo, GRAPH_OPERATION* operation, void* da, void* a,
     CORRESPONDENCE* findDa=NULL;
     CORRESPONDENCE* findA=NULL;
     if(grafo!=NULL){
-        findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, parameter);
+        findDa=searchIDIntoCorrespondenceTable(grafo->correspondence, da, grafo->operationID, parameter);
         if(findDa!=NULL){
-            findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, parameter);
+            findA=searchIDIntoCorrespondenceTable(grafo->correspondence, a, grafo->operationID, parameter);
             if(findA!=NULL){
+                printf("%d-%d\n", findDa->index, findA->index);
                 return operation->esisteArco(grafo, findDa->index, findA->index);
             }
         }
@@ -161,8 +160,8 @@ GRAPH* eliminaGrafo(GRAPH* grafo, void* parameter){
                 free(grafo->vertici[i]);
             }
         }
-        //free(grafo->vertici);
-        freeCorrespondenceTable(grafo->correspondence, NULL);
+        free(grafo->vertici);
+        freeCorrespondenceTable(grafo->correspondence, grafo->operationID, NULL);
         grafo->listaNodiLiberi=deleteList(grafo->listaNodiLiberi, grafo->operationInt, NULL);
         free(grafo->operationID);
         free(grafo->operationInt);
@@ -172,41 +171,37 @@ GRAPH* eliminaGrafo(GRAPH* grafo, void* parameter){
     return grafo;
 }
 
-CORRESPONDENCE_TABLE* initCorrGraph(GRAPH* grafo, HASH_OPERATION* hash_id, LIST_OPERATION* list_id){
-    HASH_OPERATION* h_id, *h_index;
-    LIST_OPERATION* l_id, *l_index;
-//    h_id=initHashOperation(hashCorrespondenceID, collisionString);
-//    l_id=initListOperation(insertString, copyString, deleteString, compareString, printString);
-    h_index=initHashOperation(hashCorrespondenceIndex, collisionInteger);
-    l_index=initListOperation(insertInteger, copyInteger, deleteInteger, compareInteger, printInteger);
-    grafo->correspondence=initCorresponcendeTable(grafo->dimensioneArrayVertici, list_id, l_index, hash_id, h_index);
+CORRESPONDENCE_TABLE* initCorrGraph(GRAPH* grafo, FUNCTDATA* list_id){
+    FUNCTDATA *l_index;
+    l_index=initFUNCTDATA(insertInteger, copyInteger, NULL, compareInteger, NULL, hashingInteger, collisionInteger, printInteger, deleteInteger);
+    grafo->correspondence=initCorresponcendeTable(grafo->dimensioneArrayVertici, list_id, l_index);
     return grafo->correspondence;
 }
 
 
 GRAPH* init(GRAPH* graf,int dim, FUNINS ins, FUNCPY cpy, FUNDEL del, FUNCOM comp, FUNPRINT pri, FUNHASH has, FUNCOLLISION coll){
     int i=1;
-    HASH_OPERATION* h_id;
-    LIST_OPERATION* l_id;
+    //HASH_OPERATION* h_id;
+    FUNCTDATA* l_id;
     GRAPH* grafo=NULL;
     grafo=(GRAPH*)malloc(sizeof(GRAPH));
 
-    grafo->operationInt=initListOperation(insertInteger, copyInteger, deleteInteger, compareInteger, printInteger);
-    grafo->operationID=initFUNCTDATA_2(ins, cpy, NULL, comp, NULL, pri, del);
+    grafo->operationInt=initFUNCTDATA(insertInteger, copyInteger, NULL, compareInteger, NULL, hashingInteger, collisionInteger, printInteger, deleteInteger);
+    grafo->operationID=initFUNCTDATA(ins, cpy, NULL, comp, NULL, has, coll, pri, del);
     grafo->dimensioneArrayVertici=dim;
-    grafo->vertici=(GRAPH_NODE**)malloc(sizeof(GRAPH_NODE*));
+
+    grafo->vertici=(GRAPH_NODE**)malloc(sizeof(GRAPH_NODE*)*grafo->dimensioneArrayVertici);
     for(i=0; i<grafo->dimensioneArrayVertici; i++){
         grafo->vertici[i]=NULL;
     }
-
     grafo->numVerticiUsati=0;
     grafo->listaNodiLiberi=NULL;
     for(i=grafo->dimensioneArrayVertici-1; i>=0; i--){
         grafo->listaNodiLiberi=push(grafo->listaNodiLiberi, grafo->operationInt, &i, NULL);
     }
-    h_id=initHashOperation(has, coll);
-    l_id=initListOperation(ins, cpy, del, comp, pri);
-    grafo->correspondence=initCorrGraph(grafo, h_id, l_id);
+    l_id=initFUNCTDATA(ins, cpy, NULL, comp, NULL, has, coll, pri, del);
+
+    grafo->correspondence=initCorrGraph(grafo, l_id);
 
     return grafo;
 }

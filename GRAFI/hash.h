@@ -2,8 +2,6 @@
 #include "list.h"
     #define _HASH_H_
 
-    typedef long unsigned int(*FUNHASH)(void*, void*);
-    typedef void*(*FUNCOLLISION)(void*);
 
     typedef struct HASH_OPERATION{
         FUNHASH hashing;
@@ -13,12 +11,11 @@
     typedef struct HASH_TABLE{
         long unsigned int dimension;
         LIST* table;
-        LIST_OPERATION* l_operation;
-        HASH_OPERATION* h_operation;
+        FUNCTDATA* l_operation;
     }HASH_TABLE;
 
     HASH_OPERATION* initHashOperation(FUNHASH, FUNCOLLISION);
-    HASH_TABLE* initHashTable(long unsigned int, LIST_OPERATION*, HASH_OPERATION*);
+    HASH_TABLE* initHashTable(long unsigned int, FUNCTDATA*);//, HASH_OPERATION*);
     HASH_TABLE* insertIntoHashTable(HASH_TABLE*, void*, void*);
     HASH_TABLE* deleteFromHashTable(HASH_TABLE*, void*, void*);
     void* searchIntoHashTable(HASH_TABLE*, void*, void*);

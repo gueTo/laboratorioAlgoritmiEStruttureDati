@@ -1,43 +1,45 @@
 # depslib dependency file v1.0
-1463008999 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
+1464034680 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.c
 	<stdlib.h>
 	<stdio.h>
 	"list.h"
 	"correspondence.h"
 
-1463336798 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\main.c
+1463678202 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\main.c
 	<stdio.h>
 	<stdlib.h>
 	"hash.h"
 	"correspondence.h"
 	"grafi.h"
+	"GrafoListaAdiacenza.h"
 	"GrafoMatriceAdiacenza.h"
 
-1463330422 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.c
+1464034376 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<time.h>
 	"data.h"
 
-1463330400 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.h
+1464034376 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\data.h
 	<stdio.h>
 
-1463076575 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.c
+1464034931 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"correspondence.h"
+	"data.h"
 	"list.h"
 	"hash.h"
 
-1462277124 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
+1464034680 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\list.h
 	"data.h"
 
-1443698678 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.h
+1464034680 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\hash.h
 	"list.h"
 
-1462880117 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.c
+1464034709 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\correspondence.c
 	"data.h"
 	<stdio.h>
 	<stdlib.h>
@@ -51,7 +53,7 @@
 
 1443543100 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\cc.c
 
-1463336667 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafi.c
+1464034809 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafi.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -61,13 +63,200 @@
 	"grafi.h"
 	"GrafoMatriceAdiacenza.h"
 
-1463336437 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.c
+1463497890 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.c
 	"grafi.h"
 	"GrafoMatriceAdiacenza.h"
 
 1463336756 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafi.h
 	"correspondence.h"
 
-1463336756 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.h
+1463500825 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafomatriceadiacenza.h
 	"grafi.h"
+
+1463500825 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\gafolistadj.c
+
+1464034822 source:c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafolistaadiacenza.c
+	"data.h"
+	<stdio.h>
+	"grafi.h"
+	"GrafoListaAdiacenza.h"
+
+1463500825 c:\users\antonio\desktop\lasd\laboratorioalgoritmiestrutturedati\grafi\grafolistaadiacenza.h
+	<stdio.h>
+	"data.h"
+	"grafi.h"
+
+1443543102 source:c:\users\utente\desktop\grafi_t\cc.c
+
+1463500826 source:c:\users\utente\desktop\grafi_t\gafolistadj.c
+
+1464283721 source:c:\users\utente\desktop\grafi_t\grafi.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"hash.h"
+	"correspondence.h"
+	"list.h"
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1464102165 c:\users\utente\desktop\grafi_t\hash.h
+	"list.h"
+
+1464102057 c:\users\utente\desktop\grafi_t\list.h
+	"data.h"
+
+1464277950 c:\users\utente\desktop\grafi_t\data.h
+	<stdio.h>
+
+1464283410 c:\users\utente\desktop\grafi_t\correspondence.h
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+
+1464283561 c:\users\utente\desktop\grafi_t\grafi.h
+	"correspondence.h"
+
+1463500826 c:\users\utente\desktop\grafi_t\grafomatriceadiacenza.h
+	"grafi.h"
+
+1464034824 source:c:\users\utente\desktop\grafi_t\grafolistaadiacenza.c
+	"data.h"
+	<stdio.h>
+	"grafi.h"
+	"GrafoListaAdiacenza.h"
+
+1463500826 c:\users\utente\desktop\grafi_t\grafolistaadiacenza.h
+	<stdio.h>
+	"data.h"
+	"grafi.h"
+
+1464280883 source:c:\users\utente\desktop\grafi_t\grafomatriceadiacenza.c
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1464278052 source:c:\users\utente\desktop\grafi_t\list.c
+	<stdlib.h>
+	<stdio.h>
+	"list.h"
+	"correspondence.h"
+
+1464283776 source:c:\users\utente\desktop\grafi_t\main.c
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+	"grafi.h"
+	"GrafoListaAdiacenza.h"
+	"GrafoMatriceAdiacenza.h"
+
+1464283442 source:c:\users\utente\desktop\grafi_t\correspondence.c
+	"data.h"
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+
+1464281387 source:c:\users\utente\desktop\grafi_t\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1464282943 source:c:\users\utente\desktop\grafi_t\hash.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"correspondence.h"
+	"data.h"
+	"list.h"
+	"hash.h"
+
+1443543102 source:f:\grafi_t\cc.c
+
+1464281388 source:f:\grafi_t\data.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"data.h"
+
+1464277952 f:\grafi_t\data.h
+	<stdio.h>
+
+1463500826 source:f:\grafi_t\gafolistadj.c
+
+1464034824 source:f:\grafi_t\grafolistaadiacenza.c
+	"data.h"
+	<stdio.h>
+	"grafi.h"
+	"GrafoListaAdiacenza.h"
+
+1464283562 f:\grafi_t\grafi.h
+	"correspondence.h"
+
+1464283412 f:\grafi_t\correspondence.h
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+
+1464102166 f:\grafi_t\hash.h
+	"list.h"
+
+1464102058 f:\grafi_t\list.h
+	"data.h"
+
+1463500826 f:\grafi_t\grafolistaadiacenza.h
+	<stdio.h>
+	"data.h"
+	"grafi.h"
+
+1464284014 source:f:\grafi_t\grafomatriceadiacenza.c
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
+
+1463500826 f:\grafi_t\grafomatriceadiacenza.h
+	"grafi.h"
+
+1464282944 source:f:\grafi_t\hash.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"correspondence.h"
+	"data.h"
+	"list.h"
+	"hash.h"
+
+1464278054 source:f:\grafi_t\list.c
+	<stdlib.h>
+	<stdio.h>
+	"list.h"
+	"correspondence.h"
+
+1464375080 source:f:\grafi_t\main.c
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+	"grafi.h"
+	"GrafoListaAdiacenza.h"
+	"GrafoMatriceAdiacenza.h"
+
+1464284382 source:f:\grafi_t\correspondence.c
+	"data.h"
+	<stdio.h>
+	<stdlib.h>
+	"hash.h"
+	"correspondence.h"
+
+1464284382 source:f:\grafi_t\grafi.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"hash.h"
+	"correspondence.h"
+	"list.h"
+	"grafi.h"
+	"GrafoMatriceAdiacenza.h"
 

@@ -21,7 +21,7 @@ GRAPH* initMatriceAdiacenza(GRAPH* grafo){
     return grafo;
 }
 
-GRAPH* inserisciVerticeGrafoADJ(GRAPH* grafo){
+GRAPH* inserisciVerticeGrafoMatriceAdiacenza(GRAPH* grafo){
     int j, k;
     int** nuovaMatrice;
     if(grafo!=NULL){
@@ -44,7 +44,7 @@ GRAPH* inserisciVerticeGrafoADJ(GRAPH* grafo){
     return grafo;
 }
 
-GRAPH* cancellaVerticeGrafoADJ(GRAPH* grafo, int indice){
+GRAPH* cancellaVerticeGrafoMatriceAdiacenza(GRAPH* grafo, int indice){
     int i;
     for(i=0; i<grafo->numVerticiUsati; i++){
         ((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[i][indice]=NESSUN_ARCO;
@@ -53,18 +53,18 @@ GRAPH* cancellaVerticeGrafoADJ(GRAPH* grafo, int indice){
     return grafo;
 }
 
-GRAPH* aggiungiArcoGrafoADJ(GRAPH* grafo, int da, int a, int peso){
+GRAPH* aggiungiArcoGrafoMatriceAdiacenza(GRAPH* grafo, int da, int a, int peso){
     ((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[da][a]=peso;
     return grafo;
 }
 
-GRAPH* rimuoviArcoGrafoADJ(GRAPH* grafo, int da, int a){
+GRAPH* rimuoviArcoGrafoMatriceAdiacenza(GRAPH* grafo, int da, int a){
     ((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[da][a]=NESSUN_ARCO;
     return grafo;
 }
 
-int esisteArcoGrafoADJ(GRAPH* grafo, int da, int a){
-    if(((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[da][a]==NESSUN_ARCO){
+int esisteArcoGrafoMatriceAdiacenza(GRAPH* grafo, int da, int a){
+    if(((GRAPH_MATR_ADJ*)(grafo->rapp))->rapp[da][a]!=NESSUN_ARCO){
         return 1;
     }
     return 0;
